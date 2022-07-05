@@ -1,10 +1,10 @@
 export const enum Square {
   /** Spot is valid for moving to. */
   EMPTY,
-  /** A black piece occupys this spot. */
-  BLACK,
   /** A white piece occupys this spot. */
   WHITE,
+  /** A black piece occupys this spot. */
+  BLACK,
   /** Spot was destroyed by a missile. */
   DESTROYED,
 }
@@ -24,15 +24,9 @@ export type Position = `${Column}${Row}`;
 export type Color = Square.BLACK | Square.WHITE;
 export type Board = Square[][];
 export type Comment = string;
-export type FEN = `${string} ${string} ${string} ${number}`;
+export type FEN = `${string} ${"w" | "b"} ${Position | "-"} ${number}`;
 export type Header = { [header: string]: string };
-export type Move =
-  | string
-  | {
-      from: Position;
-      to: Position;
-      arrow: Position;
-    };
+export type Move = string;
 export type PGN = string[];
 
 export interface Amazons {
