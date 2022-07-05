@@ -14,11 +14,18 @@ export const enum PosColor {
   DARK,
 }
 
+// arbitrarily chose max 20 columns
+// prettier-ignore
+export type Column = 'a'|'b'|'c'|'d'|'e'|'f'|'g'|'h'|'i'|'j'|'k'|'l'|'m'|'n'|'o'|'p'|'q'|'r'|'s'|'t'
+// prettier-ignore
+export type Row = '1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9'|'10'|'11'|'12'|'13'|'14'|'15'|'16'|'17'|'18'|'19'|'20';
+export type Position = `${Column}${Row}`;
+
 export type Color = Square.BLACK | Square.WHITE;
 export type Board = Square[][];
 export type Comment = string;
-export type FEN = string;
-export type Header = Map<string, string>;
+export type FEN = `${string} ${string} ${string} ${number}`;
+export type Header = { [header: string]: string };
 export type Move =
   | string
   | {
@@ -27,17 +34,17 @@ export type Move =
       arrow: Position;
     };
 export type PGN = string[];
-export type Position = string;
 
-export type Amazons = {
+export interface Amazons {
   ascii: () => string;
   board: () => Board;
-  clear: () => null;
+  clear: () => void;
   delete_comment: () => Comment;
   delete_comments: () => {
     fen: FEN;
     comment: Comment;
   }[];
+  // similar to a chess fen, adapted to the game of the amazons
   fen: () => FEN;
   game_over: () => boolean;
   get: (pos: Position) => Square;
@@ -51,15 +58,15 @@ export type Amazons = {
   in_endgame: () => boolean;
   load: (fen: FEN) => boolean;
   load_png: (pgn: PGN) => boolean;
-  move: (mv: Move) => null;
+  move: (mv: Move) => void;
   moves: () => Position[];
   pgn: () => PGN;
   put: (piece: Square, pos: Position) => boolean;
   remove: (pos: Position) => Square;
-  reset: () => null;
-  set_comment: (comment: string) => null;
+  reset: () => void;
+  set_comment: (comment: string) => void;
   position_color: (pos: Position) => PosColor;
   turn: () => Color;
   undo: () => Move;
   validate_fen: (fen: FEN) => boolean;
-};
+}
