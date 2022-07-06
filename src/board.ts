@@ -7,6 +7,10 @@ export class Board implements BoardType {
   public readonly board: Square[][];
   private col_names: string;
 
+  /**
+   * Haldles board positions and moving pieces
+   * Does NOT handle validation, which is done at the API level.
+   */
   constructor(board: Square[][]) {
     this.board = board;
     this.cols = board.length;
