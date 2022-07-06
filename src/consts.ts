@@ -1,3 +1,5 @@
+import { FEN, Square } from "./types";
+
 const COLS = "abcdefghijklmnopqrst";
 
 const VALID_CHARS = "wbx0123456789";
@@ -10,17 +12,6 @@ for (let i = 0; i < COLS.length; i++) {
   NUM_TO_COLS[i] = COLS[i];
 }
 
-const enum Square {
-  /** Spot is valid for moving to. */
-  EMPTY,
-  /** A white piece occupys this spot. */
-  WHITE,
-  /** A black piece occupys this spot. */
-  BLACK,
-  /** Spot was destroyed by an arrow. */
-  ARROW,
-}
-
 const MAP_COLOR_SQUARE: { [key: string]: Square } = {
   w: Square.WHITE,
   b: Square.BLACK,
@@ -28,11 +19,17 @@ const MAP_COLOR_SQUARE: { [key: string]: Square } = {
   e: Square.EMPTY,
 };
 
-const enum PosColor {
-  /** h1 and a8 are light squares */
-  LIGHT,
-  /** a1 and h8 are dark squares */
-  DARK,
-}
+const DEFAULT_POSITIONS: { [key: number]: FEN } = {
+  6: "3b2/6/b5/5w/6/2w3 w - 1",
+  8: "3b4/8/b6b/8/8/w6w/8/4w3 w - 1",
+  10: "3b2b3/10/10/b8b/10/10/w8w/10/10/3w2w3 w - 1",
+};
 
-export { COLS, COLS_TO_NUM, Square, VALID_CHARS, MAP_COLOR_SQUARE, PosColor };
+export {
+  COLS,
+  COLS_TO_NUM,
+  Square,
+  VALID_CHARS,
+  MAP_COLOR_SQUARE,
+  DEFAULT_POSITIONS,
+};

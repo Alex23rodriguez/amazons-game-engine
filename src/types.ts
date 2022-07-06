@@ -1,5 +1,3 @@
-import { Square, PosColor } from "./consts";
-
 // arbitrarily chose max 20 columns
 // prettier-ignore
 export type Column = 'a'|'b'|'c'|'d'|'e'|'f'|'g'|'h'|'i'|'j'|'k'|'l'|'m'|'n'|'o'|'p'|'q'|'r'|'s'|'t'
@@ -13,6 +11,24 @@ export type FEN = `${string} ${Player} ${Position | "-"} ${number}`;
 export type Header = { [header: string]: string };
 export type Move = string;
 export type PGN = string[];
+
+export const enum PosColor {
+  /** h1 and a8 are light squares */
+  LIGHT,
+  /** a1 and h8 are dark squares */
+  DARK,
+}
+
+export const enum Square {
+  /** Spot is valid for moving to. */
+  EMPTY,
+  /** A white piece occupys this spot. */
+  WHITE,
+  /** A black piece occupys this spot. */
+  BLACK,
+  /** Spot was destroyed by an arrow. */
+  ARROW,
+}
 
 export interface Board {
   rows: number;
