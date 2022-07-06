@@ -1,18 +1,4 @@
-export const enum Square {
-  /** Spot is valid for moving to. */
-  EMPTY,
-  /** A white piece occupys this spot. */
-  WHITE,
-  /** A black piece occupys this spot. */
-  BLACK,
-  /** Spot was destroyed by a missile. */
-  DESTROYED,
-}
-
-export const enum PosColor {
-  LIGHT,
-  DARK,
-}
+import { Square, PosColor } from "./consts";
 
 // arbitrarily chose max 20 columns
 // prettier-ignore
@@ -21,13 +7,34 @@ export type Column = 'a'|'b'|'c'|'d'|'e'|'f'|'g'|'h'|'i'|'j'|'k'|'l'|'m'|'n'|'o'
 export type Row = '1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9'|'10'|'11'|'12'|'13'|'14'|'15'|'16'|'17'|'18'|'19'|'20';
 export type Position = `${Column}${Row}`;
 
-export type Color = Square.BLACK | Square.WHITE;
-export type Board = Square[][];
 export type Comment = string;
-export type FEN = `${string} ${"w" | "b"} ${Position | "-"} ${number}`;
+export type Player = "w" | "b";
+export type FEN = `${string} ${Player} ${Position | "-"} ${number}`;
 export type Header = { [header: string]: string };
 export type Move = string;
 export type PGN = string[];
+
+export interface Board {
+  rows: number;
+  cols: number;
+  board: Square[][];
+  get: (pos: Position) => Square;
+  get_index: (pos: Position) => [number, number];
+  move: (move: Move) => void;
+  undo: (move: Move) => void;
+}
+
+export type ErrorObj = {
+  error: string;
+};
+
+export interface Game {
+  layout: string;
+  moving: Player;
+  shooting: Position;
+  turn: number;
+  board: Board;
+}
 
 export interface Amazons {
   ascii: () => string;
@@ -60,7 +67,7 @@ export interface Amazons {
   reset: () => void;
   set_comment: (comment: string) => void;
   position_color: (pos: Position) => PosColor;
-  turn: () => Color;
+  turn: () => number;
   undo: () => Move;
   validate_fen: (fen: FEN) => boolean;
 }
