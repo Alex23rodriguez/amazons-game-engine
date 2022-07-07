@@ -1,7 +1,7 @@
 import { COLS, Square } from "./consts";
-import { Position, Board as BoardType, Move } from "./types";
+import { Position, Move } from "./types";
 
-export class Board implements BoardType {
+export class Board {
   public readonly rows: number;
   public readonly cols: number;
   public readonly board: Square[][];
@@ -24,7 +24,7 @@ export class Board implements BoardType {
 
   get_index(pos: Position) {
     let indexes: [number, number] = [
-      Number(pos.substring(1)),
+      Number(pos.substring(1)) - 1,
       this.col_names.indexOf(pos[0]),
     ];
     return indexes;

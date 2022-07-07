@@ -1,13 +1,13 @@
-import { Square, Player, FEN, Game, ErrorObj, Position } from "./types";
+import { Square, Player, FEN, Game, ErrorType, Position } from "./types";
 import * as cnst from "./consts";
 import { is_turn, is_position, is_player } from "./validation";
 import { Board } from "./board";
 
-export function create_game(fen_or_size: FEN | number): Game | ErrorObj {
+export function create_game(fen_or_size: FEN | number): Game | ErrorType {
   let fen: FEN;
   if (typeof fen_or_size === "string") fen = fen_or_size;
   else if (typeof fen_or_size === "number") {
-    fen = cnst.DEFAULT_POSITIONS[fen];
+    fen = cnst.DEFAULT_POSITIONS[fen_or_size];
     if (typeof fen === "undefined")
       return {
         error: `size must be one of ${Object.keys(cnst.DEFAULT_POSITIONS)}`,
@@ -40,20 +40,21 @@ export function create_game(fen_or_size: FEN | number): Game | ErrorObj {
   if (!is_turn(turn)) return { error: "Invalid turn number" };
 
   let dimensions = is_layout(layout);
-  if (dimensions.error) return dimensions as ErrorObj;
+  if (dimensions.error) return dimensions as ErrorType;
 
   // it is now safe to make the board
   let { rows, cols } = dimensions;
   let board = layout_to_board(layout, cols);
   game["board"] = board;
 
-  if (!is_position(shooting, rows, cols)) {
-    return { error: "shooting field is not a valid position" };
-  }
   // if shooting is '-', the FEN is correct
   if (shooting === "-") {
     game["shooting"] = null;
     return game;
+  }
+
+  if (!is_position(shooting, rows, cols)) {
+    return { error: "shooting field is not a valid position" };
   }
   // otherwise, check if shooting is the correct color
   if (board.get(shooting as Position) !== cnst.MAP_COLOR_SQUARE[moving])
@@ -78,12 +79,10 @@ function make_row(row: string, cols: number) {
   for (let char of row) {
     let n = Number(char);
     if (Number.isNaN(n)) {
+      index += Number(sub);
+      sub = "";
       ans[index] = cnst.MAP_COLOR_SQUARE[char];
       index++;
-      if (sub) {
-        index += Number(sub);
-        sub = "";
-      }
     } else {
       sub += char;
     }

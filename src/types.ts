@@ -1,3 +1,5 @@
+import { Board } from "./board";
+
 // arbitrarily chose max 20 columns
 // prettier-ignore
 export type Column = 'a'|'b'|'c'|'d'|'e'|'f'|'g'|'h'|'i'|'j'|'k'|'l'|'m'|'n'|'o'|'p'|'q'|'r'|'s'|'t'
@@ -30,7 +32,7 @@ export const enum Square {
   ARROW,
 }
 
-export interface Board {
+/* export interface BoardType {
   rows: number;
   cols: number;
   board: Square[][];
@@ -38,9 +40,9 @@ export interface Board {
   get_index: (pos: Position) => [number, number];
   move: (move: Move) => void;
   undo: (move: Move) => void;
-}
+} */
 
-export type ErrorObj = {
+export type ErrorType = {
   error: string;
 };
 
@@ -52,7 +54,7 @@ export interface Game {
   board: Board;
 }
 
-export interface Amazons {
+/* export interface Amazons {
   ascii: () => string;
   board: () => Board;
   clear: () => void;
@@ -86,4 +88,4 @@ export interface Amazons {
   turn: () => number;
   undo: () => Move;
   validate_fen: (fen: FEN) => boolean;
-}
+} */
