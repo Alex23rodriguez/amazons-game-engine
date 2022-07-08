@@ -1,6 +1,8 @@
+import { COLS } from "./consts";
+
 export function is_position(pos: string, rows: number, cols: number) {
   // check column
-  let max_col = String.fromCharCode(96 + cols);
+  let max_col = COLS[cols - 1];
   if (pos[0] < "a" || pos[0] > max_col) return false;
   // check row
   let row = Number(pos.substring(1));

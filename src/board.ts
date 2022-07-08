@@ -12,10 +12,17 @@ export class Board {
    * Does NOT handle validation, which is done at the API level.
    */
   constructor(board: Square[][]) {
+    /* board layout
+     * [
+     *  ["a3", "b3", "c3", "d3"],
+     *  ["a2", "b2", "c2", "d2"],
+     *  ["a1", "b1", "c1", "d1"],
+     * ]
+     **/
     this.board = board;
-    this.cols = board.length;
-    this.rows = board[0].length;
-    this.col_names = COLS.substring(0, this.cols).split("").reverse().join("");
+    this.rows = board.length;
+    this.cols = board[0].length;
+    this.col_names = COLS.substring(0, this.cols);
   }
   get(pos: Position) {
     let [row, col] = this.get_index(pos);
@@ -24,7 +31,7 @@ export class Board {
 
   get_index(pos: Position) {
     let indexes: [number, number] = [
-      Number(pos.substring(1)) - 1,
+      this.rows - Number(pos.substring(1)),
       this.col_names.indexOf(pos[0]),
     ];
     return indexes;
