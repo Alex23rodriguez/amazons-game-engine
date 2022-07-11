@@ -1,6 +1,4 @@
-import { BLACK, WHITE } from "./amazons";
-import { COLS } from "./consts";
-import { FEN, Player, State } from "./types";
+import { BLACK, COLS, WHITE } from "./consts";
 import { get_layout_shape, maybe_verbose } from "./util";
 
 /**
