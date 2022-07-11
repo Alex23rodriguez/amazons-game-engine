@@ -16,6 +16,13 @@ export function maybe_verbose(
   return value;
 }
 
+/**
+ * given a layout field of a FEN (check README for details)
+ * will verify that it is a valid layout and then
+ * will return the dimensions of the board
+ * @param layout layout field of a FEN
+ * @param verbose if true, wraps result in {value: [number,number], error: string | null }
+ */
 export function get_layout_shape(layout: string, verbose = false) {
   let bad_layout = [null, null];
   let rows: string[] = layout.split("/");
@@ -64,7 +71,13 @@ export function get_layout_shape(layout: string, verbose = false) {
   return maybe_verbose(verbose, { rows: rows.length, num_cols }, null);
 }
 
-function get_row_length(row: string, verbose = false) {
+/**
+ * given a row from the layout field of a FEN (check README for details)
+ * will return its length, or null if the row is invalid
+ * @param row a row from the layout field of a FEN
+ * @param verbose if true, wraps result in {value: number, error: string | null }
+ */
+export function get_row_length(row: string, verbose = false) {
   if (row === "") {
     return maybe_verbose(verbose, null, "Row cannot be empty string");
   }
