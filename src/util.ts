@@ -1,4 +1,5 @@
-import { VALID_CHARS } from "./consts";
+import { MAP_COLOR_SQUARE, VALID_CHARS } from "./consts";
+import { Piece, Player, Square } from "./types";
 
 /**
  * Utility function to **optionally** wrap a result in an error object.
@@ -103,4 +104,57 @@ export function get_row_length(row: string, verbose = false) {
   }
   count += Number(sub);
   return maybe_verbose(verbose, count, null);
+}
+
+/**
+ * given a layout field of a FEN (check README for details)
+ * will return the dimensions of the board
+ * WARNING: only use when **certain** that the layout is valid,
+ *   otherwise could lead to errors
+ */
+export function get_layout_shape_unsafe(layout: string) {
+  let rows = layout.split("/");
+  let cols = get_row_length(rows[0], false);
+  return [rows, cols];
+}
+
+/**
+ * given a layout field of a FEN (check README for details)
+ * will return a Piece[][]
+ * WARNING: only use when **certain** that the layout is valid,
+ *   otherwise could lead to errors
+ */
+export function layout_to_board(layout: string, cols: number) {
+  const board: Piece[][] = [];
+  for (let row of layout.split("/")) {
+    board.push(make_row(row, cols));
+  }
+  return board;
+}
+
+/**
+ * given a row from the layout field of a FEN (check README for details)
+ * will return a Piece[] corresponding to the actual positions of the pieces
+ */
+function make_row(row: string, cols: number) {
+  let ans: Piece[] = Array(cols).fill(0);
+  let index = 0;
+  let sub = "";
+  for (let char of row) {
+    let n = Number(char);
+    if (Number.isNaN(n)) {
+      index += Number(sub);
+      sub = "";
+      ans[index] = MAP_COLOR_SQUARE[char];
+      index++;
+    } else {
+      sub += char;
+    }
+  }
+  return ans;
+}
+
+export function board_to_layout(board: Piece[][]) {
+  // TODO
+  return "";
 }

@@ -1,4 +1,5 @@
 import { BLACK, COLS, WHITE } from "./consts";
+import { Piece, Player, Square } from "./types";
 import { get_layout_shape, maybe_verbose } from "./util";
 
 /**
