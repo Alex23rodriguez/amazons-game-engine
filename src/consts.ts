@@ -1,27 +1,32 @@
 import { FEN, Piece } from "./types";
 
-export const MAX_SIZE = 20;
-export const COLS = "abcdefghijklmnopqrst";
+export const MAX_SIZE = 20; // don't exede 26
+export const RANKS = "abcdefghijklmnopqrstuvwxyz".substring(0, MAX_SIZE); // 20 goes up to 't'
 
-export const VALID_CHARS = "wbx0123456789";
-export const BLACK = "b";
-export const WHITE = "w";
+export const P_BLACK = "b";
+export const P_WHITE = "w";
+export const P_ARROW = "x"; // this one is not a player, but used in layout
+export const P_EMPTY = "o"; // this one is not a player, but may be used in layout in the future
+export const LAYOUT_CHARS = P_BLACK + P_WHITE + P_ARROW + "0123456789";
 
-export const [COLS_TO_NUM, NUM_TO_COLS] = (() => {
-  let ctn = {};
-  let ntc = {};
-  for (let i = 0; i < COLS.length; i++) {
-    ctn[COLS[i]] = i;
-    ntc[i] = COLS[i];
+export const RANK_MAP = (() => {
+  let rank = {};
+  for (let i = 0; i < RANKS.length; i++) {
+    rank[RANKS[i]] = i;
+    rank[i] = RANKS[i];
   }
-  return [ctn, ntc];
+  return rank;
 })();
 
-export const PLAYER_TO_PIECE: { [key: string]: Piece } = {
-  w: Piece.WHITE,
-  b: Piece.BLACK,
-  x: Piece.ARROW,
-  e: Piece.EMPTY,
+export const LAYOUT_MAP = {
+  [P_WHITE]: Piece.WHITE,
+  [P_BLACK]: Piece.BLACK,
+  [P_ARROW]: Piece.ARROW,
+  [P_EMPTY]: Piece.EMPTY,
+  [Piece.WHITE]: P_WHITE,
+  [Piece.BLACK]: P_BLACK,
+  [Piece.ARROW]: P_ARROW,
+  [Piece.EMPTY]: P_EMPTY,
 };
 
 export const DEFAULT_POSITIONS: { [key: number]: FEN } = {
