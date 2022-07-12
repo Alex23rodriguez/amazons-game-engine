@@ -1,5 +1,5 @@
-import { MAP_COLOR_SQUARE, VALID_CHARS } from "./consts";
-import { Piece, Player, Square } from "./types";
+import { PLAYER_TO_PIECE, VALID_CHARS } from "./consts";
+import { Piece } from "./types";
 
 /**
  * Utility function to **optionally** wrap a result in an error object.
@@ -145,7 +145,7 @@ function make_row(row: string, cols: number) {
     if (Number.isNaN(n)) {
       index += Number(sub);
       sub = "";
-      ans[index] = MAP_COLOR_SQUARE[char];
+      ans[index] = PLAYER_TO_PIECE[char];
       index++;
     } else {
       sub += char;

@@ -4,8 +4,8 @@ export const MAX_SIZE = 20;
 export const COLS = "abcdefghijklmnopqrst";
 
 export const VALID_CHARS = "wbx0123456789";
-export const BLACK = "wbx0123456789";
-export const WHITE = "wbx0123456789";
+export const BLACK = "b";
+export const WHITE = "w";
 
 export const [COLS_TO_NUM, NUM_TO_COLS] = (() => {
   let ctn = {};
@@ -17,7 +17,7 @@ export const [COLS_TO_NUM, NUM_TO_COLS] = (() => {
   return [ctn, ntc];
 })();
 
-export const MAP_COLOR_SQUARE: { [key: string]: Piece } = {
+export const PLAYER_TO_PIECE: { [key: string]: Piece } = {
   w: Piece.WHITE,
   b: Piece.BLACK,
   x: Piece.ARROW,
