@@ -2,9 +2,9 @@ import { LAYOUT_MAP, RANKS } from "./consts";
 import { Piece, Square } from "./types";
 
 export class Board {
-  private board: Piece[][];
-  private rows: number;
-  private cols: number;
+  public board: Piece[][];
+  readonly rows: number;
+  readonly cols: number;
 
   /**
    * Class that handles movement of the pieces.
