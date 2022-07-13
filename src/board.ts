@@ -65,6 +65,15 @@ export class Board {
     this.put(sq2, Piece.EMPTY);
   }
 
+  /**
+   * returns the board represented as a layout field of a FEN (check README for details)
+   */
+  layout() {
+    return board_to_layout(this.board);
+  }
+
+  // PRIVATE METHODS
+
   private put(sq: Square, piece: Piece) {
     // square to coords
     let [r, c] = sq_to_coords(sq);
@@ -95,7 +104,7 @@ function layout_to_board(layout: string, cols: number) {
 
   const board: Piece[][] = [];
   for (let row of rows) {
-    board.push(make_row(row, cols));
+    board.push(make_board_row(row, cols));
   }
   return board;
 }
@@ -104,11 +113,11 @@ function layout_to_board(layout: string, cols: number) {
  * given a row from the layout field of a FEN (check README for details)
  * will return a Piece[] corresponding to the actual positions of the pieces
  */
-function make_row(row: string, cols: number) {
+function make_board_row(layout_row: string, cols: number) {
   let ans: Piece[] = Array(cols).fill(Piece.EMPTY);
   let index = 0;
   let sub = "";
-  for (let char of row) {
+  for (let char of layout_row) {
     let n = Number(char);
     if (Number.isNaN(n)) {
       index += Number(sub);
@@ -122,6 +131,25 @@ function make_row(row: string, cols: number) {
   return ans;
 }
 
+function board_to_layout(board: Piece[][]) {
+  return board.map(make_layout_row).join("/");
+}
+
+function make_layout_row(row: Piece[]) {
+  let ans = "";
+  let cnt_empty = 0;
+  for (let p of row) {
+    if (p === Piece.EMPTY) {
+      cnt_empty++;
+      continue;
+    }
+    ans += cnt_empty ? cnt_empty : "";
+    ans += LAYOUT_MAP[p];
+    cnt_empty = 0;
+  }
+  return ans;
+}
+
 /**
  * given a row from the layout field of a FEN (check README for details)
  * will return its length
@@ -131,15 +159,15 @@ function get_row_length(row: string) {
   let num_empty = ""; // acumulates chars that represent a number
   for (let char of row) {
     let n = Number(char);
-    // when char represents an arrow, or a queen
-    if (Number.isNaN(n)) {
-      count++;
-      count += Number(num_empty); // will be zero if empty string
-      num_empty = "";
-      // when char represents empty space
-    } else {
+    if (!Number.isNaN(n)) {
+      // char is a digit
       num_empty += char;
+      continue;
     }
+    // when char represents an arrow, or a queen
+    count++;
+    count += Number(num_empty); // will be zero if empty string
+    num_empty = "";
   }
   count += Number(num_empty);
   return count;
