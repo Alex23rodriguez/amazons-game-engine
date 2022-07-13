@@ -91,20 +91,20 @@ export class Board {
 
   private put(sq: Square, piece: Piece) {
     // square to coords
-    let [r, c] = this.coords(sq);
+    let [r, c] = this.to_coords(sq);
 
     this.board[r][c] = piece;
   }
 
   private get(sq: Square) {
-    let [r, c] = this.coords(sq);
+    let [r, c] = this.to_coords(sq);
     return this.board[r][c];
   }
 
   /**
    * given a square, returns the row and col to index Piece[][]
    */
-  private coords(sq: Square) {
+  private to_coords(sq: Square) {
     let coords: [number, number] = [
       this.rows - Number(sq.substring(1)),
       RANKS.indexOf(sq[0]),
