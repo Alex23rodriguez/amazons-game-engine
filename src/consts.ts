@@ -9,15 +9,6 @@ export const P_ARROW = "x"; // this one is not a player, but used in layout
 export const P_EMPTY = "o"; // this one is not a player, but may be used in layout in the future
 export const LAYOUT_CHARS = P_BLACK + P_WHITE + P_ARROW + "0123456789";
 
-export const RANK_MAP = (() => {
-  let rank = {};
-  for (let i = 0; i < RANKS.length; i++) {
-    rank[RANKS[i]] = i;
-    rank[i] = RANKS[i];
-  }
-  return rank;
-})();
-
 export const LAYOUT_MAP = {
   [P_WHITE]: Piece.WHITE,
   [P_BLACK]: Piece.BLACK,

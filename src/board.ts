@@ -1,8 +1,10 @@
-import { LAYOUT_MAP, RANKS, RANK_MAP } from "./consts";
+import { LAYOUT_MAP, RANKS } from "./consts";
 import { Piece, Square } from "./types";
 
 export class Board {
   private board: Piece[][];
+  private rows: number;
+  private cols: number;
 
   /**
    * Class that handles movement of the pieces.
@@ -13,6 +15,8 @@ export class Board {
     let [rows, cols] = get_layout_shape(layout);
     rows = rows;
     cols = cols;
+    this.rows = rows;
+    this.cols = cols;
     this.board = layout_to_board(layout, cols);
   }
 
@@ -72,26 +76,41 @@ export class Board {
     return board_to_layout(this.board);
   }
 
+  /**
+   * return a copy of the board as an array of arrays of pieces
+   */
+  copy() {
+    let copy: Piece[][] = [];
+    for (let row of this.board) {
+      copy.push(Array.from(row));
+    }
+    return copy;
+  }
+
   // PRIVATE METHODS
 
   private put(sq: Square, piece: Piece) {
     // square to coords
-    let [r, c] = sq_to_coords(sq);
+    let [r, c] = this.coords(sq);
 
     this.board[r][c] = piece;
   }
 
   private get(sq: Square) {
-    let [r, c] = sq_to_coords(sq);
+    let [r, c] = this.coords(sq);
     return this.board[r][c];
   }
-}
 
-/**
- * given a square, returns the row and col to index Piece[][]
- */
-function sq_to_coords(sq: Square) {
-  return [Number(sq.substring(1)) - 1, RANK_MAP[sq[0]]];
+  /**
+   * given a square, returns the row and col to index Piece[][]
+   */
+  private coords(sq: Square) {
+    let coords: [number, number] = [
+      this.rows - Number(sq.substring(1)),
+      RANKS.indexOf(sq[0]),
+    ];
+    return coords;
+  }
 }
 
 /**
