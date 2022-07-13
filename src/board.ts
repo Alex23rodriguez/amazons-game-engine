@@ -87,6 +87,34 @@ export class Board {
     return copy;
   }
 
+  get_positions(queen: Piece.BLACK | Piece.WHITE) {
+    let squares: Square[] = [];
+
+    for (let r = 0; r < this.rows; r++)
+      for (let c = 0; c < this.cols; c++)
+        if (this.board[r][c] === queen) squares.push(this.from_coords(r, c));
+    return squares;
+  }
+
+  get_vision(sq: Square) {
+    let squares: Square[] = [];
+    for (let i of [-1, 0, 1]) {
+      for (let j of [-1, 0, 1]) {
+        if (i === 0 && j === 0) continue;
+
+        let [r, c] = this.to_coords(sq);
+        r += i;
+        c += j;
+        while (this.board[r] && this.board[r][c] === Piece.EMPTY) {
+          squares.push(this.from_coords(r, c));
+          r += i;
+          c += j;
+        }
+      }
+    }
+    return squares;
+  }
+
   // PRIVATE METHODS
 
   private put(sq: Square, piece: Piece) {
@@ -110,6 +138,11 @@ export class Board {
       RANKS.indexOf(sq[0]),
     ];
     return coords;
+  }
+
+  private from_coords(row: number, col: number) {
+    let sq: Square = `${RANKS[col]}${this.rows - row}` as Square;
+    return sq;
   }
 }
 
