@@ -4,6 +4,11 @@ import { Piece, Square } from "./types";
 export class Board {
   private board: Piece[][];
 
+  /**
+   * Class that handles movement of the pieces.
+   * DOES NOT verify that the arguments it is given are correct, so should not be used directly (instead, use the API)
+   * this is made for performance at the cost of soundness
+   */
   constructor(layout: string) {
     let [rows, cols] = get_layout_shape(layout);
     rows = rows;
@@ -11,12 +16,18 @@ export class Board {
     this.board = layout_to_board(layout, cols);
   }
 
+  /**
+   * creates and returns an empty Board of the given size
+   */
   static from_size(rows: number, cols: number) {
     return new Board(Array(rows).fill(cols).join("/"));
   }
 
   /**
-   * TODO: documentation
+   * make a move on the board. different behavior depending of number of args:
+   * 1 arg: assumes second part of move: places an arrow at sq1
+   * 2 args: assumes first part of move: moves piece at sq1 to sq2 and clears sq1
+   * 3 args: assumes full move: moves piece at sq1 to sq2 and clears sq1, then places an arrow at sq3
    */
   move(sq1: Square, sq2?: Square, sq3?: Square) {
     if (typeof sq2 === "undefined") {
@@ -33,6 +44,12 @@ export class Board {
     }
   }
 
+  /**
+   * undo a move on the board. different behavior depending of number of args:
+   * 1 arg: assumes second part of move: clears sq1 (hopefully from an arrow)
+   * 2 args: assumes first part of move: moves piece at sq2 to sq1 and clears sq2
+   * 3 args: assumes full move: clears sq3, then moves piece at sq2 to sq1 and clears sq2
+   */
   undo(sq1: Square, sq2?: Square, sq3?: Square) {
     if (typeof sq2 === "undefined") {
       // undo placement of an arrow
@@ -61,6 +78,9 @@ export class Board {
   }
 }
 
+/**
+ * given a square, returns the row and col to index Piece[][]
+ */
 function sq_to_coords(sq: Square) {
   return [Number(sq.substring(1)) - 1, RANK_MAP[sq[0]]];
 }
