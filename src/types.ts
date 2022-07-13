@@ -26,10 +26,3 @@ export const enum Piece {
   /** Spot was destroyed by an arrow. */
   ARROW,
 }
-
-export type State = {
-  board: Piece[][];
-  moving: Player;
-  shooting: Square | null;
-  turn: number;
-};
