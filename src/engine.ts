@@ -38,6 +38,23 @@ export class Engine {
     ](...m);
   }
 
+  public moves(): Move[] {
+    if (this.shooting) {
+      let queen_vision = this.board.get_vision(this.shooting);
+      return queen_vision.map((s) => [s]);
+    }
+
+    let queens = this.board.get_positions(LAYOUT_MAP[this.shooting]);
+    let ans = [];
+
+    for (let q of queens) {
+      let queen_vision = this.board.get_vision(q);
+      ans.push(...queen_vision.map((s) => [q, s]));
+    }
+
+    return ans;
+  }
+
   // PRIVATE METHODS
 
   private after_shooting(sq3: Square) {

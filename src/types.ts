@@ -7,7 +7,7 @@ export type Row = '1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9'|'10'|'11'|'12'|'13'|'14'|'
 export type Square = `${Column}${Row}`;
 export type Player = "w" | "b";
 export type FEN = `${string} ${Player} ${Square | "-"} ${number}`;
-export type Move = Square[]; //`${Square}-${Square}-${Square}`;
+export type Move = [Square, Square?, Square?];
 
 export const enum SqColor {
   /** h1 and a8 are light squares */
