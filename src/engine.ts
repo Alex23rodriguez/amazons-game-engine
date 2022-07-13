@@ -1,7 +1,6 @@
 import { Board } from "./board";
 import { LAYOUT_MAP, P_BLACK, P_WHITE } from "./consts";
 import { FEN, Move, Piece, Player, Square } from "./types";
-import { ascii } from "./misc";
 
 export class Engine {
   private _board: Board;
@@ -59,7 +58,7 @@ export class Engine {
   }
 
   ascii() {
-    return ascii(this._board.board);
+    return this._board.ascii();
   }
 
   // GETTERS

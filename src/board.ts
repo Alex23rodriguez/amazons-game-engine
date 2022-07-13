@@ -1,4 +1,5 @@
 import { LAYOUT_MAP, RANKS } from "./consts";
+import { ascii } from "./misc";
 import { Piece, Square } from "./types";
 
 export class Board {
@@ -113,6 +114,10 @@ export class Board {
       }
     }
     return squares;
+  }
+
+  ascii() {
+    return ascii(this.board);
   }
 
   // PRIVATE METHODS
