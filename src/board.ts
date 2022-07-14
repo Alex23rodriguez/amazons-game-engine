@@ -37,15 +37,15 @@ export class Board {
   move(sq1: Square, sq2?: Square, sq3?: Square) {
     if (typeof sq2 === "undefined") {
       // place an arrow at specified square
-      this.put(sq1, Piece.ARROW);
+      this.put(Piece.ARROW, sq1);
       return;
     }
-    // move queen at sq1 to sq2
-    this.put(sq2, this.get(sq1));
-    this.put(sq1, Piece.EMPTY);
+    // move queen at sq1 to sq2. Assumes sq1 !== sq2
+    this.put(this.get(sq1), sq2);
+    this.put(Piece.EMPTY, sq1);
     if (sq3) {
       // place an arrow at specified square
-      this.put(sq3, Piece.ARROW);
+      this.put(Piece.ARROW, sq3);
     }
   }
 
@@ -58,16 +58,16 @@ export class Board {
   undo(sq1: Square, sq2?: Square, sq3?: Square) {
     if (typeof sq2 === "undefined") {
       // undo placement of an arrow
-      this.put(sq1, Piece.EMPTY);
+      this.put(Piece.EMPTY, sq1);
       return;
     }
     if (sq3) {
       // remove arrow
-      this.put(sq3, Piece.EMPTY);
+      this.put(Piece.EMPTY, sq3);
     }
-    // undo movement of a queen
-    this.put(sq1, this.get(sq2));
-    this.put(sq2, Piece.EMPTY);
+    // undo movement of a queen. Assumes sq1 !== sq2
+    this.put(this.get(sq2), sq1);
+    this.put(Piece.EMPTY, sq2);
   }
 
   /**
@@ -120,19 +120,25 @@ export class Board {
     return ascii(this.board);
   }
 
-  // PRIVATE METHODS
-
-  private put(sq: Square, piece: Piece) {
+  /**
+   * puts the specified piece in the specified square
+   */
+  put(piece: Piece, sq: Square) {
     // square to coords
     let [r, c] = this.to_coords(sq);
 
     this.board[r][c] = piece;
   }
 
-  private get(sq: Square) {
+  /**
+   * returns the piece at the specified square
+   */
+  get(sq: Square) {
     let [r, c] = this.to_coords(sq);
     return this.board[r][c];
   }
+
+  // PRIVATE METHODS
 
   /**
    * given a square, returns the row and col to index Piece[][]
