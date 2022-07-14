@@ -5,19 +5,17 @@ export const RANKS = "abcdefghijklmnopqrstuvwxyz".substring(0, MAX_SIZE); // 20 
 
 export const P_BLACK = "b";
 export const P_WHITE = "w";
-export const P_ARROW = "x"; // this one is not a player, but used in layout
-export const P_EMPTY = "o"; // this one is not a player, but may be used in layout in the future
-export const LAYOUT_CHARS = P_BLACK + P_WHITE + P_ARROW + "0123456789";
+export const L_ARROW = "x"; // this one is not a player, but used in layout
+export const NOT_SHOOTING = "-";
+export const LAYOUT_CHARS = P_BLACK + P_WHITE + L_ARROW + "0123456789";
 
 export const LAYOUT_MAP = {
   [P_WHITE]: Piece.WHITE,
   [P_BLACK]: Piece.BLACK,
-  [P_ARROW]: Piece.ARROW,
-  [P_EMPTY]: Piece.EMPTY,
+  [L_ARROW]: Piece.ARROW,
   [Piece.WHITE]: P_WHITE,
   [Piece.BLACK]: P_BLACK,
-  [Piece.ARROW]: P_ARROW,
-  [Piece.EMPTY]: P_EMPTY,
+  [Piece.ARROW]: L_ARROW,
 };
 
 export const DEFAULT_POSITIONS: { [key: number]: FEN } = {
