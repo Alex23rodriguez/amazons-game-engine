@@ -1,4 +1,5 @@
 import { LAYOUT_CHARS, MAX_SIZE, P_BLACK, P_WHITE, RANKS } from "./consts";
+import { FEN } from "./types";
 
 function wrap(value: any, error: string, byprod?: any) {
   if (typeof byprod === "undefined") return { value, error };
@@ -94,7 +95,9 @@ export function is_square_in_range(sq: string, rows: number, cols: number) {
       `Column must be at most ${cols}, instead got ${issq.byprod.col}`
     );
   let row = issq.byprod.row;
-  if (row > rows) return row >= 1 && row <= rows;
+  let ans = row >= 1 && row <= rows;
+  if (ans) return wrap(true, null);
+  return wrap(false, "TODO");
 }
 
 /**
@@ -158,5 +161,24 @@ export function is_fen(fen: string) {
     }
   }
 
+  return wrap(true, null);
+}
+
+export function is_valid_fen(fen: string) {
+  // TODO
+  return wrap(true, null, { rows: 1, cols: 1 });
+}
+
+export function is_move(m, rows: number, cols: number) {
+  if (typeof m !== "object" || m.length < 1 || m.length > 3)
+    return wrap(false, "move must be an array of 1 to 3 squares");
+
+  for (let sq of m) {
+    let ans = is_square_in_range(m, rows, cols);
+
+    if (ans.error) {
+      return wrap(false, ans.error);
+    }
+  }
   return wrap(true, null);
 }

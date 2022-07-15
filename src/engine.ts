@@ -7,16 +7,20 @@ export class Engine {
   private _turn: Player;
   private _shooting_sq: Square;
   private _move_num: number;
+  readonly rows;
+  readonly cols;
 
   private hist: Move[];
 
   constructor(fen: FEN) {
     let [layout, turn, shooting_sq, move_num] = fen.split(/\s+/);
-    this._board = new Board(layout);
     this._turn = turn as Player;
     this._shooting_sq =
       shooting_sq === NOT_SHOOTING ? null : (shooting_sq as Square);
     this._move_num = Number(move_num);
+    this._board = new Board(layout);
+    this.rows = this._board.rows;
+    this.cols = this._board.cols;
 
     this.hist = [];
   }
