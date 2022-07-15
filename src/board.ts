@@ -210,6 +210,8 @@ function make_layout_row(row: Piece[]) {
     ans += LAYOUT_MAP[p];
     cnt_empty = 0;
   }
+
+  ans += cnt_empty ? cnt_empty : "";
   return ans;
 }
 
