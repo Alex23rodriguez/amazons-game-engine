@@ -21,7 +21,7 @@ export class Engine {
     this.hist = [];
   }
 
-  fen() {
+  fen(): FEN {
     return `${this._board.layout()} ${this._turn} ${this._shooting_sq} ${
       this._move_num
     }`;
@@ -111,6 +111,10 @@ export class Engine {
   }
 
   // GETTERS
+
+  get board() {
+    return this._board.copy();
+  }
 
   get turn() {
     return this._turn;
