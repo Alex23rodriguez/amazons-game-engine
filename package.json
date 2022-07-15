@@ -1,14 +1,14 @@
 {
-  "name": "amazons-game-logic",
+  "name": "amazons-game-engine",
   "version": "1.0.0",
-  "description": "amazons-game-logic is a Typescript chess library that is used for 'the Game of the Amazons' move generation/validation, piece placement/movement, and endgame detection and counting - basically everything but the AI. This package's API has been inspired by 'chess.js'",
+  "description": "amazons-game-engine is a Typescript chess library that is used for 'the Game of the Amazons' move generation/validation, piece placement/movement, and endgame detection and counting - basically everything but the AI. This package's API has been inspired by 'chess.js'",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Alex23rodriguez/amazons-game-logic.git"
+    "url": "git+https://github.com/Alex23rodriguez/amazons-game-engine.git"
   },
   "keywords": [
     "amazons",
@@ -20,7 +20,7 @@
   "author": "AR",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Alex23rodriguez/amazons-game-logic/issues"
+    "url": "https://github.com/Alex23rodriguez/amazons-game-engine/issues"
   },
-  "homepage": "https://github.com/Alex23rodriguez/amazons-game-logic#readme"
+  "homepage": "https://github.com/Alex23rodriguez/amazons-game-engine#readme"
 }
