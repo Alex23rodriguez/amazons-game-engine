@@ -1,45 +1,108 @@
-import { BLACK, COLS, WHITE } from "./consts";
-import { Piece, Player, Square } from "./types";
-import { get_layout_shape, maybe_verbose } from "./util";
+import { LAYOUT_CHARS, MAX_SIZE, P_BLACK, P_WHITE, RANKS } from "./consts";
+
+function wrap(value: any, error: string, byprod?: any) {
+  if (typeof byprod === "undefined") return { value, error };
+  return { value, error, byprod };
+}
+
+/**
+ * given a row from the layout field of a FEN (check README for details)
+ * will return its length, or null if the row is invalid
+ * @param row a row from the layout field of a FEN
+ */
+function get_row_length(row: string) {
+  if (row === "") {
+    return wrap(null, "Row cannot be empty string");
+  }
+  let count = 0;
+  let sub = "";
+  for (let char of row) {
+    if (!LAYOUT_CHARS.includes(char))
+      return wrap(null, `Row contains invalid char: '${char}'`); // invalid row
+    let n = Number(char);
+    if (Number.isNaN(n)) {
+      count++;
+      if (sub) {
+        count += Number(sub);
+        sub = "";
+      }
+    } else {
+      sub += char;
+    }
+  }
+  count += Number(sub);
+  return wrap(count, null);
+}
+
+function get_layout_shape(layout: string) {
+  let bad_layout = [null, null];
+  let rows: string[] = layout.split("/");
+  if (rows.length > 20)
+    return wrap(bad_layout, "Board must have at most 20 rows");
+
+  // check first row to get number of columns
+  let temp = get_row_length(rows[0]);
+  if (temp.error) {
+    return wrap(bad_layout, `row#0 ${rows[0]}: ${temp.error}`);
+  }
+  let num_cols: number = temp.value;
+  if (num_cols > 20)
+    return wrap(bad_layout, "Board must have at most 20 columns");
+
+  // check all other rows
+  for (let i = 1; i < rows.length; i++) {
+    let row = rows[i];
+    temp = get_row_length(row);
+    if (temp.error) {
+      return wrap(bad_layout, `row#${i} ${row}: ${temp.error}`);
+    }
+    if (num_cols !== temp.value)
+      return wrap(
+        bad_layout,
+        `row#${i} ${row} should have ${num_cols} columns, but has ${temp.value}`
+      );
+  }
+  return wrap({ rows: rows.length, num_cols }, null);
+}
 
 /**
  * Verify that the given string is a valid square, given a board size.
  * square must be in lowercase letters
+ * @returns byprod row and col which can be used to index board
  */
-export function is_square(sq: string, rows: number, cols: number) {
-  // check column
-  let max_col = COLS[cols - 1];
-  if (sq[0] < "a" || sq[0] > max_col) return false;
-  // check row
+export function is_square(sq: string) {
+  let col = RANKS.indexOf(sq[0]);
+  if (col === -1) return wrap(false, `Invalid column: '${sq[0]}'`);
   let row = Number(sq.substring(1));
-  return row >= 1 && row <= rows;
+
+  if (row < 1 || row > MAX_SIZE || row !== ~~row)
+    return wrap(
+      false,
+      `Rows must be int between 1 and ${MAX_SIZE}, instead got '${row}'`
+    );
+
+  return wrap(true, null, { row: row - 1, col: col });
 }
 
-/**
- * Verify that the given string is a valid move, given the board size.
- * moves consist of three squares separated by a '-'
- * DOES NOT verify that the move is possible (ie vertical, horizontal or on the diagonal)
- */
-export function is_move(move: string, rows: number, cols: number) {
-  const parts = move.split("-");
-  return parts.length === 3 && parts.every((x) => is_square(x, rows, cols));
-}
+export function is_square_in_range(sq: string, rows: number, cols: number) {
+  let issq = is_square(sq);
+  if (issq.error) return issq;
 
-/**
- * Verify that the given string is a valid move, given the board size.
- * moves consist of two squares separated by a '-'
- * DOES NOT verify that the move is possible (ie vertical, horizontal or on the diagonal)
- */
-export function is_half_move(move: string, rows: number, cols: number) {
-  const parts = move.split("-");
-  return parts.length === 2 && parts.every((x) => is_square(x, rows, cols));
+  if (issq.byprod.col > cols)
+    return wrap(
+      false,
+      `Column must be at most ${cols}, instead got ${issq.byprod.col}`
+    );
+  let row = issq.byprod.row;
+  if (row > rows) return row >= 1 && row <= rows;
 }
 
 /**
  * Verify that the given string coincides with a char designating either player
  */
 export function is_player(p: string) {
-  return p === BLACK || p === WHITE;
+  let ans = p === P_BLACK || p === P_WHITE;
+  return ans ? wrap(true, null) : wrap(false, "Player field invalid");
 }
 
 /**
@@ -47,13 +110,13 @@ export function is_player(p: string) {
  */
 export function is_turn(turn: number | string) {
   let n = Number(turn);
-  return n >= 1 && n === ~~n;
+  let ans = n >= 1 && n === ~~n;
+  return ans ? wrap(true, null) : wrap(false, "Turn must be a positive int");
 }
 
 /**
  * Verify that the given string constitutes a valid FEN.
  * @param fen string to check
- * @param verbose if true, instead of returning a boolean, will return {value: boolean, error: string | null} detailing what failed in the FEN
  *
  * A valid FEN is a string with 4 fields separated by whitespace:
  * - layout: a string detailing the layout of the board (view README for more info)
@@ -65,11 +128,10 @@ export function is_turn(turn: number | string) {
  *   DOES NOT verify that it is within the size of the board,
  *   NOR that it points to a queen of the correct color
  */
-export function is_fen(fen: string, verbose = false) {
+export function is_fen(fen: string) {
   let fields = fen.split(/\s+/);
   if (fields.length !== 4)
-    return maybe_verbose(
-      verbose,
+    return wrap(
       false,
       "FEN must contain exactly 4 fields separated by a whitespace"
     );
@@ -79,27 +141,22 @@ export function is_fen(fen: string, verbose = false) {
 
   // start fen validation
   if (!is_player(moving))
-    return maybe_verbose(verbose, false, `Invalid moving player: ${moving}`);
+    return wrap(false, `Invalid moving player: ${moving}`);
 
-  if (!is_turn(turn))
-    return maybe_verbose(verbose, false, `Invalid turn number: ${turn}`);
+  if (!is_turn(turn)) return wrap(false, `Invalid turn number: ${turn}`);
 
-  let dimensions = get_layout_shape(layout, true);
+  let dimensions = get_layout_shape(layout);
   if (dimensions.error) {
-    return maybe_verbose(verbose, false, `Invalid layout: ${dimensions.error}`);
+    return wrap(false, `Invalid layout: ${dimensions.error}`);
   }
 
-  let { rows, cols } = dimensions;
+  let { rows, cols } = dimensions.byprod;
 
   if (shooting !== "-") {
-    if (!is_square(shooting, rows, cols)) {
-      return maybe_verbose(
-        verbose,
-        false,
-        `Invalid shooting square: ${shooting}`
-      );
+    if (!is_square_in_range(shooting, rows, cols)) {
+      return wrap(false, `Invalid shooting square: ${shooting}`);
     }
   }
 
-  return maybe_verbose(verbose, true, null);
+  return wrap(true, null);
 }
