@@ -1,5 +1,13 @@
-import { LAYOUT_CHARS, MAX_SIZE, P_BLACK, P_WHITE, RANKS } from "./consts";
-import { FEN } from "./types";
+import {
+  LAYOUT_CHARS,
+  LAYOUT_MAP,
+  MAX_SIZE,
+  P_BLACK,
+  P_WHITE,
+  RANKS,
+} from "./consts";
+import { Engine } from "./engine";
+import { FEN, Player } from "./types";
 
 function wrap(value: any, error: string, byprod?: any) {
   if (typeof byprod === "undefined") return { value, error };
@@ -63,7 +71,7 @@ function get_layout_shape(layout: string) {
         `row#${i} ${row} should have ${num_cols} columns, but has ${temp.value}`
       );
   }
-  return wrap({ rows: rows.length, num_cols }, null);
+  return wrap({ rows: rows.length, cols: num_cols }, null);
 }
 
 /**
@@ -73,14 +81,11 @@ function get_layout_shape(layout: string) {
  */
 export function is_square(sq: string) {
   let col = RANKS.indexOf(sq[0]);
-  if (col === -1) return wrap(false, `Invalid column: '${sq[0]}'`);
+  if (col === -1) return wrap(false, `Invalid square name: ${sq}`);
   let row = Number(sq.substring(1));
 
   if (row < 1 || row > MAX_SIZE || row !== ~~row)
-    return wrap(
-      false,
-      `Rows must be int between 1 and ${MAX_SIZE}, instead got '${row}'`
-    );
+    return wrap(false, `Invalid square name: ${sq}`);
 
   return wrap(true, null, { row: row - 1, col: col });
 }
@@ -92,12 +97,15 @@ export function is_square_in_range(sq: string, rows: number, cols: number) {
   if (issq.byprod.col > cols)
     return wrap(
       false,
-      `Column must be at most ${cols}, instead got ${issq.byprod.col}`
+      `Column must be at most '${RANKS[cols]}' for given layout, instead got '${sq[0]}'`
     );
   let row = issq.byprod.row;
-  let ans = row >= 1 && row <= rows;
-  if (ans) return wrap(true, null);
-  return wrap(false, "TODO");
+  if (row < 0 || row >= rows)
+    return wrap(
+      false,
+      `Row must be at most ${rows} for given layout, instead got ${row + 1}`
+    );
+  return wrap(true, null);
 }
 
 /**
@@ -105,7 +113,12 @@ export function is_square_in_range(sq: string, rows: number, cols: number) {
  */
 export function is_player(p: string) {
   let ans = p === P_BLACK || p === P_WHITE;
-  return ans ? wrap(true, null) : wrap(false, "Player field invalid");
+  return ans
+    ? wrap(true, null)
+    : wrap(
+        false,
+        `Turn field invalid. Expected '${P_WHITE}' or '${P_BLACK}', instead got '${p}'`
+      );
 }
 
 /**
@@ -114,7 +127,9 @@ export function is_player(p: string) {
 export function is_turn(turn: number | string) {
   let n = Number(turn);
   let ans = n >= 1 && n === ~~n;
-  return ans ? wrap(true, null) : wrap(false, "Turn must be a positive int");
+  return ans
+    ? wrap(true, null)
+    : wrap(false, `Turn must be a positive int, instead got ${turn}`);
 }
 
 /**
@@ -140,24 +155,26 @@ export function is_fen(fen: string) {
     );
 
   // split fen into individual fields
-  const [layout, moving, shooting, turn] = fields;
+  const [layout, turn, shooting_sq, move_num] = fields;
 
   // start fen validation
-  if (!is_player(moving))
-    return wrap(false, `Invalid moving player: ${moving}`);
+  let temp = is_player(turn);
+  if (temp.error) return temp;
 
-  if (!is_turn(turn)) return wrap(false, `Invalid turn number: ${turn}`);
+  temp = is_turn(move_num);
+  if (temp.error) return temp;
 
   let dimensions = get_layout_shape(layout);
   if (dimensions.error) {
-    return wrap(false, `Invalid layout: ${dimensions.error}`);
+    return dimensions;
   }
 
-  let { rows, cols } = dimensions.byprod;
+  let { rows, cols } = dimensions.value;
 
-  if (shooting !== "-") {
-    if (!is_square_in_range(shooting, rows, cols)) {
-      return wrap(false, `Invalid shooting square: ${shooting}`);
+  if (shooting_sq !== "-") {
+    temp = is_square_in_range(shooting_sq, rows, cols);
+    if (temp.error) {
+      return temp;
     }
   }
 
@@ -166,7 +183,22 @@ export function is_fen(fen: string) {
 
 export function is_valid_fen(fen: string) {
   // TODO
-  return wrap(true, null, { rows: 1, cols: 1 });
+  let temp = is_fen(fen);
+  if (temp.error) return temp;
+
+  let engine = new Engine(fen as FEN);
+  let { shooting_sq, turn } = engine;
+  if (shooting_sq) {
+    let actual = LAYOUT_MAP[engine.get(shooting_sq)];
+
+    if (actual !== turn)
+      return wrap(
+        false,
+        `Shooting square '${shooting_sq}' does not point to player with current turn`
+      );
+  }
+
+  return wrap(true, null, { engine });
 }
 
 export function is_move(m, rows: number, cols: number) {
