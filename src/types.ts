@@ -9,6 +9,12 @@ export type Player = "w" | "b";
 export type FEN = `${string} ${Player} ${Square | "-"} ${number}`;
 export type Move = [Square, Square?, Square?];
 
+export type Validation = {
+  value: any;
+  error: string;
+  byprod?: any;
+};
+
 export const enum SqColor {
   /** h1 and a8 are light squares */
   LIGHT,

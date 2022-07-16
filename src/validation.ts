@@ -8,9 +8,9 @@ import {
   RANKS,
 } from "./consts";
 import { Engine } from "./engine";
-import { FEN } from "./types";
+import { FEN, Validation } from "./types";
 
-function wrap(value: any, error: string, byprod?: any) {
+function wrap(value: any, error: string, byprod?: any): Validation {
   if (typeof byprod === "undefined") return { value, error };
   return { value, error, byprod };
 }

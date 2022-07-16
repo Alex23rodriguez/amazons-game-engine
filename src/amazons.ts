@@ -1,6 +1,6 @@
 import { DEFAULT_POSITIONS } from "./consts";
 import { Engine } from "./engine";
-import { FEN, Move } from "./types";
+import { FEN, Move, Validation } from "./types";
 import { is_valid_fen, is_move, is_default_size } from "./validation";
 
 export const Amazons = (fen_or_size?: number | FEN) => {
@@ -40,7 +40,7 @@ export const Amazons = (fen_or_size?: number | FEN) => {
   };
 };
 
-function assert(condition: any) {
+function assert(condition: Validation) {
   if (condition.error) throw new Error(condition.error);
   return condition.byprod;
 }
