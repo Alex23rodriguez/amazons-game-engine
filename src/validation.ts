@@ -1,4 +1,5 @@
 import {
+  DEFAULT_POSITIONS,
   LAYOUT_CHARS,
   LAYOUT_MAP,
   MAX_SIZE,
@@ -7,7 +8,7 @@ import {
   RANKS,
 } from "./consts";
 import { Engine } from "./engine";
-import { FEN, Player } from "./types";
+import { FEN } from "./types";
 
 function wrap(value: any, error: string, byprod?: any) {
   if (typeof byprod === "undefined") return { value, error };
@@ -129,7 +130,7 @@ export function is_turn(turn: number | string) {
   let ans = n >= 1 && n === ~~n;
   return ans
     ? wrap(true, null)
-    : wrap(false, `Turn must be a positive int, instead got ${turn}`);
+    : wrap(false, `Turn field must be a positive int, instead got ${turn}`);
 }
 
 /**
@@ -213,4 +214,16 @@ export function is_move(m, rows: number, cols: number) {
     }
   }
   return wrap(true, null);
+}
+
+export function is_default_size(n: number) {
+  let fen = DEFAULT_POSITIONS[n];
+  if (typeof fen === "undefined")
+    return wrap(
+      false,
+      `size must be one of default sizes ${Object.keys(
+        DEFAULT_POSITIONS
+      )}. Instead got ${n}`
+    );
+  return wrap(true, null, { fen });
 }

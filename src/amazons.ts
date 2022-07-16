@@ -1,45 +1,46 @@
 import { DEFAULT_POSITIONS } from "./consts";
 import { Engine } from "./engine";
 import { FEN, Move } from "./types";
-import { is_valid_fen, is_move } from "./validation";
+import { is_valid_fen, is_move, is_default_size } from "./validation";
 
 export const Amazons = (fen_or_size?: number | FEN) => {
-  let fen;
-  let engine;
-  if (typeof fen_or_size === "undefined") {
-    fen = DEFAULT_POSITIONS[10];
-  } else if (typeof fen_or_size === "number") {
-    fen = DEFAULT_POSITIONS[fen_or_size];
-    if (!fen)
+  let fen: FEN;
+  let engine: Engine;
+
+  switch (typeof fen_or_size) {
+    case "undefined":
+      fen = DEFAULT_POSITIONS[10];
+      break;
+
+    case "number":
+      fen = assert(is_default_size(fen_or_size)).fen;
+      break;
+
+    case "string":
+      fen = fen_or_size.toLowerCase() as FEN;
+      engine = assert(is_valid_fen(fen)).engine;
+      break;
+
+    default:
       throw new Error(
-        `size must be one of default sizes ${Object.keys(
-          DEFAULT_POSITIONS
-        )}. Instead got ${fen_or_size}`
+        "parameter must be either a board size or a string representing a FEN."
       );
-  } else if (typeof fen_or_size === "string") {
-    fen = fen_or_size.toLowerCase();
-    let ans = is_valid_fen(fen);
-    if (ans.error) {
-      throw new Error(ans.error);
-    }
-    engine = ans.byprod.engine;
-  } else
-    throw new Error(
-      "parameter must be either a board size or a string representing a FEN."
-    );
+  }
 
   engine = new Engine(fen);
   let { rows, cols } = engine;
 
   return {
     move: (m: Move) => {
-      let ans = is_move(m, rows, cols);
-      if (ans.error) {
-        throw new Error(ans.error);
-      }
+      assert(is_move(m, rows, cols));
       return engine.move(m);
     },
     moves: () => engine.moves(),
     ascii: () => engine.ascii(),
   };
 };
+
+function assert(condition: any) {
+  if (condition.error) throw new Error(condition.error);
+  return condition.byprod;
+}
