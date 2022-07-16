@@ -131,6 +131,10 @@ export class Engine {
   get shooting_sq() {
     return this._shooting_sq;
   }
+
+  get history() {
+    return this.hist.map((m) => Array.from(m)) as Move[];
+  }
   // PRIVATE METHODS
 
   private switch_player() {
