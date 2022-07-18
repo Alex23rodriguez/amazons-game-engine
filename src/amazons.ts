@@ -54,7 +54,16 @@ export const Amazons = (fen_or_size?: number | FEN) => {
       }
       return false;
     },
-    moves: () => engine.moves(),
+    moves: (dict = false) => {
+      if (!dict) return moves;
+      let ans = {};
+      for (let m of moves) {
+        let [start, end] = m;
+        if (!ans[start]) ans[start] = [];
+        ans[start].push(end);
+      }
+      return ans;
+    },
     // pgn
     put: (piece: Piece, sq: Square) => {
       // TODO
@@ -76,7 +85,7 @@ export const Amazons = (fen_or_size?: number | FEN) => {
     },
     turn: () => engine.turn,
     // undo
-    validate_fen: (fen) => is_valid_fen(fen),
+    validate_fen: (fen: string) => is_valid_fen(fen),
   };
 };
 
