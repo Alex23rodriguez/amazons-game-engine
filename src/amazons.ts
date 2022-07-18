@@ -84,7 +84,14 @@ export const Amazons = (fen_or_size?: number | FEN) => {
       return color === SqColor.LIGHT ? "light" : "dark";
     },
     turn: () => engine.turn,
-    // undo
+    half_undo: () => {
+      engine.half_undo();
+      moves = engine.moves();
+    },
+    undo: () => {
+      engine.undo();
+      moves = engine.moves();
+    },
     validate_fen: (fen: string) => is_valid_fen(fen),
   };
 };
