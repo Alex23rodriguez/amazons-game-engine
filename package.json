@@ -8,6 +8,11 @@
     "type": "git",
     "url": "git+https://github.com/Alex23rodriguez/amazons-game-engine.git"
   },
+  "scripts": {
+    "patch": "tsc && npm version patch && npm publish",
+    "minor": "tsc && npm version minor && npm publish",
+    "major": "tsc && npm version major && npm publish"
+  },
   "files": [
     "/dist"
   ],
