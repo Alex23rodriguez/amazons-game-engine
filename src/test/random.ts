@@ -1,5 +1,5 @@
-import { DEFAULT_POSITIONS } from "./consts";
-import { Engine } from "./engine";
+import { DEFAULT_POSITIONS } from "../consts";
+import { Engine } from "../engine";
 
 let e = new Engine(DEFAULT_POSITIONS[6]);
 
