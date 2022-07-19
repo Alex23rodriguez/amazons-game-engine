@@ -33,7 +33,7 @@ export const Amazons = (fen_or_size?: number | FEN) => {
     // header
     history: () => engine.history,
     in_endgame: null, //TODO
-    load: (fen_or_size) => {
+    load: (fen_or_size: any) => {
       try {
         let eng = try_load(fen_or_size);
         engine = eng;
@@ -54,7 +54,12 @@ export const Amazons = (fen_or_size?: number | FEN) => {
       }
       return false;
     },
-    moves: (dict = false) => {
+    random_move: () => {
+      engine.move(moves[Math.floor(Math.random() * moves.length)]);
+      moves = engine.moves();
+      return true;
+    },
+    moves: (dict = false): { [key: string]: Square } | Move[] => {
       if (!dict) return moves;
       let ans = {};
       for (let m of moves) {
@@ -66,7 +71,8 @@ export const Amazons = (fen_or_size?: number | FEN) => {
     },
     // pgn
     put: (piece: Piece, sq: Square) => {
-      // TODO
+      assert(is_square_in_range(sq, rows, cols));
+      engine.put(piece, sq);
     },
     remove: (sq: Square) => {
       assert(is_square_in_range(sq, rows, cols));
