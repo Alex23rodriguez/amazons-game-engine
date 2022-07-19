@@ -72,6 +72,7 @@ export class Engine {
     }
 
     if (m.length === 2) {
+      this._board.undo(m[0], m[1]);
       this.undo_move();
       return m;
     }
