@@ -159,7 +159,7 @@ export class Engine {
 
     // update history
     let queen_move = this.hist.pop();
-    if (typeof queen_move === undefined) {
+    if (typeof queen_move === "undefined") {
       this.hist.push([sq3]); // in case the board started with a half move
     } else {
       this.hist.push([queen_move[0], queen_move[1], sq3]);
