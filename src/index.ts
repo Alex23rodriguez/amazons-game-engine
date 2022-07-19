@@ -1,2 +1,2 @@
 export { Amazons } from "./amazons";
-export { DEFAULT_POSITIONS } from "./consts";
+export { DEFAULT_POSITIONS, RANKS } from "./consts";
