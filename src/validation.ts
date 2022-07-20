@@ -78,7 +78,7 @@ function get_layout_shape(layout: string) {
 /**
  * Verify that the given string is a valid square, given a board size.
  * square must be in lowercase letters
- * @returns byprod row and col which can be used to index board
+ * @returns byprod row as a number (1 indexed) and col as number (index of RANKS)
  */
 export function is_square(sq: string) {
   let col = RANKS.indexOf(sq[0]);
@@ -88,25 +88,25 @@ export function is_square(sq: string) {
   if (row < 1 || row > MAX_SIZE || row !== ~~row)
     return wrap(false, `Invalid square name: ${sq}`);
 
-  return wrap(true, null, { row: row - 1, col: col });
+  return wrap(true, null, { row: row, col: col });
 }
 
 export function is_square_in_range(sq: string, rows: number, cols: number) {
   let issq = is_square(sq);
   if (issq.error) return issq;
 
-  if (issq.byprod.col > cols)
+  let { col, row } = issq.byprod;
+  if (col > cols)
     return wrap(
       false,
       `Column must be at most '${RANKS[cols]}' for given layout, instead got '${sq[0]}'`
     );
-  let row = issq.byprod.row;
-  if (row < 0 || row >= rows)
+  if (row > rows)
     return wrap(
       false,
-      `Row must be at most ${rows} for given layout, instead got ${row + 1}`
+      `Row must be at most ${rows} for given layout, instead got ${row}`
     );
-  return wrap(true, null, issq.byprod);
+  return wrap(true, null, { row: rows - row, col });
 }
 
 /**
