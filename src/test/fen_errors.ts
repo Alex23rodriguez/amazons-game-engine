@@ -13,11 +13,11 @@ let bad_fen = {
   shooting_invalid: `${layout} w nope 3`,
   shooting_invalid_2: `${layout} w a9 4`,
   shooting_invalid_3: `${layout} w a0 4`,
-  shooting_invalid_4: `${layout} w j3 4`,
+  shooting_invalid_4: `${layout} w i3 4`,
   shooting_empty: `${layout} w a1 6`,
   shooting_wrong_player: `${layout} w d8 8`,
   good: `${layout} w - 5`,
-  good2: `${layout} w e1 5`,
+  good2: `${layout} w h3 5`,
 };
 
 for (let k in bad_fen) {

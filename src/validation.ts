@@ -96,10 +96,12 @@ export function is_square_in_range(sq: string, rows: number, cols: number) {
   if (issq.error) return issq;
 
   let { col, row } = issq.byprod;
-  if (col > cols)
+  if (col >= cols)
     return wrap(
       false,
-      `Column must be at most '${RANKS[cols]}' for given layout, instead got '${sq[0]}'`
+      `Column must be at most '${
+        RANKS[cols - 1]
+      }' for given layout, instead got '${sq[0]}'`
     );
   if (row > rows)
     return wrap(
