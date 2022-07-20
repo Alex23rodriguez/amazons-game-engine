@@ -43,7 +43,7 @@ export const Amazons = (fen_or_size?: number | FEN) => {
 
   // RETURN OBJECT
   return {
-    ascii: () => engine.ascii(),
+    ascii: (flip = false) => engine.ascii(flip),
     board: () => engine.board,
     // clear
     // delete_comment

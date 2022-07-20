@@ -104,8 +104,8 @@ export class Engine {
     return ans;
   }
 
-  ascii() {
-    return this._board.ascii();
+  ascii(flip = false) {
+    return this._board.ascii(flip);
   }
 
   put(piece: Piece, sq: Square) {

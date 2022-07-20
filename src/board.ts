@@ -131,8 +131,8 @@ export class Board {
     return squares;
   }
 
-  ascii() {
-    return ascii(this.board);
+  ascii(flip = false) {
+    return ascii(this.board, flip);
   }
 
   /**
