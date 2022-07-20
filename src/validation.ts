@@ -111,6 +111,26 @@ export function is_square_in_range(sq: string, rows: number, cols: number) {
   return wrap(true, null, { row: rows - row, col });
 }
 
+export function is_coords_in_range(
+  row: number,
+  col: number,
+  rows: number,
+  cols: number
+) {
+  if (row < 0 || row >= rows || row !== ~~row)
+    return wrap(
+      false,
+      `Row coord must be int between 0 and ${rows - 1}, instead got ${row}`
+    );
+  if (col < 0 || col >= cols || col !== ~~col)
+    return wrap(
+      false,
+      `Column coord must be int between 0 and ${cols - 1}, instead got ${col}`
+    );
+
+  return wrap(true, null);
+}
+
 /**
  * Verify that the given string coincides with a char designating either player
  */
