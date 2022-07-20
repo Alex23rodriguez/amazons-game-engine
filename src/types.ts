@@ -8,6 +8,7 @@ export type Square = `${Column}${Row}`;
 export type Player = "w" | "b";
 export type FEN = `${string} ${Player} ${Square | "-"} ${number}`;
 export type Move = [Square, Square?, Square?];
+export type Coords = { row: number; col: number };
 
 export type Validation = {
   value: any;

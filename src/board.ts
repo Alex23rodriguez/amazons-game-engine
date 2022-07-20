@@ -192,6 +192,7 @@ function layout_to_board(layout: string, cols: number) {
  * will return a Piece[] corresponding to the actual positions of the pieces
  */
 function make_board_row(layout_row: string, cols: number) {
+  // TODO: change to regex parsing
   let ans: Piece[] = Array(cols).fill(Piece.EMPTY);
   let index = 0;
   let sub = "";
