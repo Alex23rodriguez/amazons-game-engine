@@ -1,6 +1,7 @@
 import { DEFAULT_POSITIONS, LAYOUT_MAP } from "./consts";
 import { Engine } from "./engine";
 import { FEN, Move, Piece, SqColor, Square, Validation } from "./types";
+import { assert } from "./util";
 import {
   is_valid_fen,
   is_default_size,
@@ -125,11 +126,6 @@ export const Amazons = (fen_or_size?: number | FEN) => {
     validate_fen: (fen: string) => is_valid_fen(fen),
   };
 };
-
-function assert(condition: Validation) {
-  if (condition.error) throw new Error(condition.error);
-  return condition.byprod;
-}
 
 function try_load(fen_or_size) {
   let fen: FEN;

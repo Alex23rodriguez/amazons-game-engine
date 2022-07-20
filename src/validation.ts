@@ -106,7 +106,7 @@ export function is_square_in_range(sq: string, rows: number, cols: number) {
       false,
       `Row must be at most ${rows} for given layout, instead got ${row + 1}`
     );
-  return wrap(true, null);
+  return wrap(true, null, issq.byprod);
 }
 
 /**
