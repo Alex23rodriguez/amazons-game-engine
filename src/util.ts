@@ -7,9 +7,14 @@ export function assert(condition: Validation) {
   return condition.byprod;
 }
 
-export function square_to_coords(sq: Square, rows: number, cols: number) {
-  let { row, col } = assert(is_square_in_range(sq, rows, cols));
-  return [row, col];
+// TODO, add flipped version
+export function square_to_coords(
+  sq: Square,
+  rows: number,
+  cols: number
+): { row: number; col: number } {
+  let coords = assert(is_square_in_range(sq, rows, cols));
+  return coords;
 }
 
 export function coords_to_square(row: number, col: number, rows: number, cols) {
