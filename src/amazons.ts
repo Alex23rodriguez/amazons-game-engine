@@ -1,4 +1,4 @@
-import { DEFAULT_POSITIONS } from "./consts";
+import { DEFAULT_POSITIONS, LAYOUT_MAP } from "./consts";
 import { Engine } from "./engine";
 import { FEN, Move, Piece, SqColor, Square, Validation } from "./types";
 import {
@@ -14,10 +14,11 @@ export const Amazons = (fen_or_size?: number | FEN) => {
   // VARIABLES
   let { rows, cols } = engine;
 
-  let moves = engine.moves();
-  let moves_dict: { [sq: string]: Square[] } = {};
+  let moves: Move[];
+  let moves_dict: { [sq: string]: Square[] };
+  let pieces: { [piece: string]: Square[] };
 
-  let update_moves = () => {
+  let update = () => {
     // update list
     moves = engine.moves();
 
@@ -28,8 +29,16 @@ export const Amazons = (fen_or_size?: number | FEN) => {
       if (!moves_dict[start]) moves_dict[start] = [];
       if (end) moves_dict[start].push(end);
     }
-    return moves_dict;
+
+    // update pieces
+    let pieces = engine.get_pieces();
+    for (let [k, v] of Object.entries(pieces)) {
+      pieces[LAYOUT_MAP[k]] = v;
+    }
   };
+
+  // initial values
+  update();
 
   // RETURN OBJECT
   return {
@@ -53,7 +62,7 @@ export const Amazons = (fen_or_size?: number | FEN) => {
         let eng = try_load(fen_or_size);
         engine = eng;
         ({ rows, cols } = eng);
-        update_moves();
+        update();
         return true;
       } catch {
         return false;
@@ -63,7 +72,7 @@ export const Amazons = (fen_or_size?: number | FEN) => {
     move: (m: Move) => {
       if (moves.some((v) => v[0] === m[0] && v[1] === m[1] && v[2] === m[2])) {
         engine.move(m);
-        update_moves();
+        update();
         // TODO return move object
         return true;
       }
@@ -72,16 +81,15 @@ export const Amazons = (fen_or_size?: number | FEN) => {
     random_move: () => {
       if (moves.length === 0) return false;
       engine.move(moves[Math.floor(Math.random() * moves.length)]);
-      update_moves();
+      update();
       return true;
     },
     move_num: () => engine.move_num,
     moves: () => {
       return moves;
     },
-    moves_dict: () => {
-      return moves_dict;
-    },
+    moves_dict: () => moves_dict,
+    pieces: () => pieces,
     // pgn
     put: (piece: Piece, sq: Square) => {
       assert(is_square_in_range(sq, rows, cols));

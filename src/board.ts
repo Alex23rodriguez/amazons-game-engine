@@ -97,6 +97,21 @@ export class Board {
     return squares;
   }
 
+  get_pieces() {
+    let pieces = {
+      [Piece.WHITE]: [] as Square[],
+      [Piece.BLACK]: [] as Square[],
+      [Piece.ARROW]: [] as Square[],
+    };
+
+    for (let r = 0; r < this.rows; r++)
+      for (let c = 0; c < this.cols; c++) {
+        let p = this.board[r][c];
+        if (p !== Piece.EMPTY) pieces[p].push(this.from_coords(r, c));
+      }
+    return pieces;
+  }
+
   get_vision(sq: Square) {
     let squares: Square[] = [];
     for (let i of [-1, 0, 1]) {

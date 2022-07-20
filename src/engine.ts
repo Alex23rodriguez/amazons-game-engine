@@ -117,6 +117,10 @@ export class Engine {
     return this._board.get(sq);
   }
 
+  get_pieces() {
+    return this._board.get_pieces();
+  }
+
   // GETTERS
 
   get board() {
