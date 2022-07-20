@@ -8,7 +8,7 @@ import {
   RANKS,
 } from "./consts";
 import { Engine } from "./engine";
-import { FEN, Validation } from "./types";
+import { Coords, FEN, Size, Validation } from "./types";
 
 function wrap(value: any, error: string, byprod?: any): Validation {
   if (typeof byprod === "undefined") return { value, error };
@@ -91,7 +91,7 @@ export function is_square(sq: string) {
   return wrap(true, null, { row: row, col: col });
 }
 
-export function is_square_in_range(sq: string, rows: number, cols: number) {
+export function is_square_in_range(sq: string, { rows, cols }: Size) {
   let issq = is_square(sq);
   if (issq.error) return issq;
 
@@ -111,12 +111,7 @@ export function is_square_in_range(sq: string, rows: number, cols: number) {
   return wrap(true, null, { row: rows - row, col });
 }
 
-export function is_coords_in_range(
-  row: number,
-  col: number,
-  rows: number,
-  cols: number
-) {
+export function is_coords_in_range({ row, col }: Coords, { rows, cols }: Size) {
   if (row < 0 || row >= rows || row !== ~~row)
     return wrap(
       false,
@@ -192,10 +187,10 @@ export function is_fen(fen: string) {
     return dimensions;
   }
 
-  let { rows, cols } = dimensions.value;
+  let size = dimensions.value;
 
   if (shooting_sq !== "-") {
-    temp = is_square_in_range(shooting_sq, rows, cols);
+    temp = is_square_in_range(shooting_sq, size);
     if (temp.error) {
       return temp;
     }
@@ -224,12 +219,12 @@ export function is_valid_fen(fen: string) {
   return wrap(true, null, { engine });
 }
 
-export function is_move(m, rows: number, cols: number) {
+export function is_move(m: string[], size: Size) {
   if (typeof m !== "object" || m.length < 1 || m.length > 3)
     return wrap(false, "move must be an array of 1 to 3 squares");
 
   for (let sq of m) {
-    let ans = is_square_in_range(m, rows, cols);
+    let ans = is_square_in_range(sq, size);
 
     if (ans.error) {
       return wrap(false, ans.error);

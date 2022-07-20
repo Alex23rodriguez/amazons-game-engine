@@ -1,6 +1,6 @@
 import { DEFAULT_POSITIONS, LAYOUT_MAP } from "./consts";
 import { Engine } from "./engine";
-import { FEN, Move, Piece, SqColor, Square, Validation } from "./types";
+import { FEN, Move, Piece, Size, SqColor, Square } from "./types";
 import { assert } from "./util";
 import {
   is_valid_fen,
@@ -13,7 +13,7 @@ export const Amazons = (fen_or_size?: number | FEN) => {
   let engine = try_load(fen_or_size);
 
   // VARIABLES
-  let { rows, cols } = engine;
+  let size: Size = { rows: engine.rows, cols: engine.cols };
 
   let moves: Move[];
   let moves_dict: { [sq: string]: Square[] };
@@ -52,7 +52,7 @@ export const Amazons = (fen_or_size?: number | FEN) => {
     fen: () => engine.fen(),
     game_over: () => moves.length === 0,
     get: (sq: Square) => {
-      assert(is_square_in_range(sq, rows, cols));
+      assert(is_square_in_range(sq, size));
       return engine.get(sq);
     },
     // get_comment
@@ -63,7 +63,7 @@ export const Amazons = (fen_or_size?: number | FEN) => {
       try {
         let eng = try_load(fen_or_size);
         engine = eng;
-        ({ rows, cols } = eng);
+        size = { rows: engine.rows, cols: eng.cols };
         update();
         return true;
       } catch {
@@ -94,21 +94,22 @@ export const Amazons = (fen_or_size?: number | FEN) => {
     pieces: () => pieces,
     // pgn
     put: (piece: Piece, sq: Square) => {
-      assert(is_square_in_range(sq, rows, cols));
+      assert(is_square_in_range(sq, size));
       engine.put(piece, sq);
     },
     remove: (sq: Square) => {
-      assert(is_square_in_range(sq, rows, cols));
+      assert(is_square_in_range(sq, size));
       let p = engine.get(sq);
       engine.put(Piece.EMPTY, sq);
       return p;
     },
     // reset
     // set_comment
+    size: () => size,
     shooting: () => engine.shooting_sq !== null,
     shooting_sq: () => engine.shooting_sq,
     square_color: (sq: Square) => {
-      assert(is_square_in_range(sq, rows, cols));
+      assert(is_square_in_range(sq, size));
       // TODO square to coords
       // let color = engine.sq_color(sq)
       let color;
