@@ -15,6 +15,21 @@ export const Amazons = (fen_or_size?: number | FEN) => {
   let { rows, cols } = engine;
 
   let moves = engine.moves();
+  let moves_dict: { [sq: string]: Square[] } = {};
+
+  let update_moves = () => {
+    // update list
+    moves = engine.moves();
+
+    // update dict
+    moves_dict = {};
+    for (let m of moves) {
+      let [start, end] = m;
+      if (!moves_dict[start]) moves_dict[start] = [];
+      if (end) moves_dict[start].push(end);
+    }
+    return moves_dict;
+  };
 
   // RETURN OBJECT
   return {
@@ -38,7 +53,7 @@ export const Amazons = (fen_or_size?: number | FEN) => {
         let eng = try_load(fen_or_size);
         engine = eng;
         ({ rows, cols } = eng);
-        moves = eng.moves();
+        update_moves();
         return true;
       } catch {
         return false;
@@ -48,7 +63,7 @@ export const Amazons = (fen_or_size?: number | FEN) => {
     move: (m: Move) => {
       if (moves.some((v) => v[0] === m[0] && v[1] === m[1] && v[2] === m[2])) {
         engine.move(m);
-        moves = engine.moves();
+        update_moves();
         // TODO return move object
         return true;
       }
@@ -57,18 +72,15 @@ export const Amazons = (fen_or_size?: number | FEN) => {
     random_move: () => {
       if (moves.length === 0) return false;
       engine.move(moves[Math.floor(Math.random() * moves.length)]);
-      moves = engine.moves();
+      update_moves();
       return true;
     },
-    moves: (dict = false): { [key: string]: Square } | Move[] => {
-      if (!dict) return moves;
-      let ans = {};
-      for (let m of moves) {
-        let [start, end] = m;
-        if (!ans[start]) ans[start] = [];
-        ans[start].push(end);
-      }
-      return ans;
+    move_num: () => engine.move_num,
+    moves: () => {
+      return moves;
+    },
+    moves_dict: () => {
+      return moves_dict;
     },
     // pgn
     put: (piece: Piece, sq: Square) => {
@@ -83,6 +95,8 @@ export const Amazons = (fen_or_size?: number | FEN) => {
     },
     // reset
     // set_comment
+    shooting: () => engine.shooting_sq !== null,
+    shooting_sq: () => engine.shooting_sq,
     square_color: (sq: Square) => {
       assert(is_square_in_range(sq, rows, cols));
       // TODO square to coords

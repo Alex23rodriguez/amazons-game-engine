@@ -44,6 +44,7 @@ export class Engine {
   }
 
   undo() {
+    // TODO: changes player when starting from shooting pos, then shooting and undoing
     let m = this.hist.pop();
     if (typeof m === "undefined") return null;
 
@@ -61,6 +62,7 @@ export class Engine {
   }
 
   half_undo(): Move {
+    // TODO: doesn't work when starting from shooting pos then shooting, then half_undoing
     let m = this.hist.pop();
     if (typeof m === "undefined") return null;
 
