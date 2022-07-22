@@ -11,6 +11,7 @@ import {
 export const Amazons = (fen_or_size?: number | FEN) => {
   // INITIAL SETUP
   let engine = try_load(fen_or_size);
+  let initial_fen = engine.fen();
 
   // VARIABLES
   let size: Size = { rows: engine.rows, cols: engine.cols };
@@ -104,6 +105,10 @@ export const Amazons = (fen_or_size?: number | FEN) => {
       return p;
     },
     // reset
+    reset: () => {
+      engine = new Engine(initial_fen);
+      update();
+    },
     // set_comment
     size: () => size,
     shooting: () => engine.shooting_sq !== null,
