@@ -1,7 +1,7 @@
 import { DEFAULT_POSITIONS, LAYOUT_MAP } from "./consts";
 import { Engine } from "./engine";
 import { FEN, Move, Piece, Size, SqColor, Square } from "./types";
-import { assert } from "./util";
+import { assert, square_to_coords } from "./util";
 import {
   is_valid_fen,
   is_default_size,
@@ -114,11 +114,10 @@ export const Amazons = (fen_or_size?: number | FEN) => {
     shooting: () => engine.shooting_sq !== null,
     shooting_sq: () => engine.shooting_sq,
     square_color: (sq: Square) => {
-      assert(is_square_in_range(sq, size));
-      // TODO square to coords
-      // let color = engine.sq_color(sq)
-      let color;
-      return color === SqColor.LIGHT ? "light" : "dark";
+      let coords = square_to_coords(sq, size);
+      coords.row = size.rows - coords.row - 1; // change to top-left indexing
+      let color = (coords.row + coords.col) % 2;
+      return color === SqColor.DARK ? "dark" : "light";
     },
     turn: () => engine.turn,
     half_undo: () => {
