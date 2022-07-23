@@ -26,9 +26,9 @@ export class Engine {
   }
 
   fen(): FEN {
-    return `${this._board.layout()} ${this._turn} ${this._shooting_sq} ${
-      this._move_num
-    }`;
+    return `${this._board.layout()} ${this._turn} ${
+      this._shooting_sq ? this._shooting_sq : "-"
+    } ${this._move_num}`;
   }
 
   move(m: Move) {
