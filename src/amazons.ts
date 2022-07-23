@@ -72,8 +72,11 @@ export const Amazons = (fen_or_size?: number | FEN) => {
       }
     },
     // load_pgn
+    can_move: (m: Move) => {
+      return moves.some((v) => v[0] === m[0] && v[1] === m[1]); // TODO update to support 3 moves with shooting
+    },
     move: (m: Move) => {
-      if (moves.some((v) => v[0] === m[0] && v[1] === m[1] && v[2] === m[2])) {
+      if (moves.some((v) => v[0] === m[0] && v[1] === m[1])) {
         engine.move(m);
         update();
         // TODO return move object
