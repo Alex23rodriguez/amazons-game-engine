@@ -71,6 +71,13 @@ export const Amazons = (fen_or_size?: number | FEN) => {
         return false;
       }
     },
+    non_empty_squares: () => {
+      let ans: { [sq: Square]: string } = {};
+      for (let [piece, sqs] of Object.entries(pieces)) {
+        for (let sq of sqs) ans[sq] = piece;
+      }
+      return ans;
+    },
     // load_pgn
     can_move: (m: Move) => {
       return moves.some((v) => v[0] === m[0] && v[1] === m[1]); // TODO update to support 3 moves with shooting
