@@ -12,10 +12,10 @@ export type Validation = {
 };
 
 export const enum SqColor {
-  /** h1 and a8 are light squares */
-  LIGHT,
   /** a1 and h8 are dark squares */
   DARK,
+  /** h1 and a8 are light squares */
+  LIGHT,
 }
 
 export const enum Piece {
