@@ -85,10 +85,11 @@ export const Amazons = (fen_or_size?: number | FEN) => {
       return false;
     },
     random_move: () => {
-      if (moves.length === 0) return false;
-      engine.move(moves[Math.floor(Math.random() * moves.length)]);
+      if (moves.length === 0) return null;
+      let move = moves[Math.floor(Math.random() * moves.length)];
+      engine.move(move);
       update();
-      return true;
+      return move;
     },
     move_num: () => engine.move_num,
     moves: () => {
