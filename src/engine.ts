@@ -121,14 +121,14 @@ export class Engine {
     return this._board.get_pieces();
   }
 
+  turn(other = false) {
+    if (other) return this._turn === P_WHITE ? P_BLACK : P_WHITE;
+    return this._turn;
+  }
   // GETTERS
 
   get board() {
     return this._board.copy();
-  }
-
-  get turn() {
-    return this._turn;
   }
 
   get move_num() {

@@ -1,6 +1,6 @@
 import { DEFAULT_POSITIONS, LAYOUT_MAP } from "./consts";
 import { Engine } from "./engine";
-import { FEN, Move, Piece, Size, SqColor, Square } from "./types";
+import { FEN, Move, Piece, Size, SqColor, Square, Player } from "./types";
 import { assert, square_to_coords } from "./util";
 import {
   is_valid_fen,
@@ -122,7 +122,7 @@ export const Amazons = (fen_or_size?: number | FEN) => {
       let color = (coords.row + coords.col) % 2;
       return color === SqColor.DARK ? "dark" : "light";
     },
-    turn: () => engine.turn,
+    turn: (other = false) => engine.turn(other),
     half_undo: () => {
       engine.half_undo();
       moves = engine.moves();
