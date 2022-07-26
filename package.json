@@ -1,6 +1,6 @@
 {
   "name": "amazons-game-engine",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "description": "amazons-game-engine is a Typescript chess library that is used for 'the Game of the Amazons' move generation/validation, piece placement/movement, and endgame detection and counting - basically everything but the AI. This package's API has been inspired by 'chess.js'",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
