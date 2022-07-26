@@ -69,7 +69,7 @@ function get_layout_shape(layout: string) {
     if (num_cols !== temp.value)
       return wrap(
         bad_layout,
-        `row#${i} ${row} should have ${num_cols} columns, but has ${temp.value}`
+        `row#${i}:'${row}' should have ${num_cols} columns, but has ${temp.value}`
       );
   }
   return wrap({ rows: rows.length, cols: num_cols }, null);
@@ -205,7 +205,8 @@ export function is_valid_fen(fen: string) {
   if (temp.error) return temp;
 
   let engine = new Engine(fen as FEN);
-  let { shooting_sq, turn } = engine;
+  let { shooting_sq } = engine;
+  let turn = engine.turn()
   if (shooting_sq) {
     let actual = LAYOUT_MAP[engine.get(shooting_sq)];
 
