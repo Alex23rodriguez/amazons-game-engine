@@ -1,7 +1,7 @@
 import { DEFAULT_POSITIONS, LAYOUT_MAP } from "./consts";
 import { Engine } from "./engine";
 import { FEN, Move, Piece, Size, SqColor, Square, Player } from "./types";
-import { assert, square_to_coords } from "./util";
+import { assert, coords_to_square, square_to_coords } from "./util";
 import {
   is_valid_fen,
   is_default_size,
@@ -17,7 +17,7 @@ export const Amazons = (fen_or_size?: number | FEN) => {
   let size: Size = { rows: engine.rows, cols: engine.cols };
 
   let moves: Move[];
-  let moves_dict: { [sq: string]: Square[] };
+  let moves_dict: { [sq: Square]: Square[] };
   let pieces: { [piece: string]: Square[] };
 
   let update = () => {
@@ -27,6 +27,7 @@ export const Amazons = (fen_or_size?: number | FEN) => {
     // update dict
     moves_dict = {};
     for (let m of moves) {
+      // TODO: maybe change? its wierd when shooting
       let [start, end] = m;
       if (!moves_dict[start]) moves_dict[start] = [];
       if (end) moves_dict[start].push(end);
@@ -91,6 +92,7 @@ export const Amazons = (fen_or_size?: number | FEN) => {
       }
       return false;
     },
+    max_square: () => coords_to_square({ col: size.cols - 1, row: 0 }, size),
     random_move: () => {
       if (moves.length === 0) return null;
       let move = moves[Math.floor(Math.random() * moves.length)];
