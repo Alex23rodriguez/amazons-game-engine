@@ -206,7 +206,7 @@ export function is_valid_fen(fen: string) {
 
   let engine = new Engine(fen as FEN);
   let { shooting_sq } = engine;
-  let turn = engine.turn()
+  let turn = engine.turn();
   if (shooting_sq) {
     let actual = LAYOUT_MAP[engine.get(shooting_sq)];
 
