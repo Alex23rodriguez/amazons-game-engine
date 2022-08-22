@@ -110,11 +110,13 @@ export const Amazons = (fen_or_size?: number | FEN) => {
     put: (piece: Piece, sq: Square) => {
       assert(is_square_in_range(sq, size));
       engine.put(piece, sq);
+      update();
     },
     remove: (sq: Square) => {
       assert(is_square_in_range(sq, size));
       let p = engine.get(sq);
       engine.put(Piece.EMPTY, sq);
+      update();
       return p;
     },
     // reset
@@ -141,6 +143,7 @@ export const Amazons = (fen_or_size?: number | FEN) => {
       engine.undo();
       moves = engine.moves();
     },
+    update: () => update(),
     validate_fen: (fen: string) => is_valid_fen(fen),
   };
 };
