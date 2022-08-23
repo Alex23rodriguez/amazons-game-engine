@@ -1,6 +1,6 @@
 import { DEFAULT_POSITIONS, LAYOUT_MAP } from "./consts";
 import { Engine } from "./engine";
-import { FEN, Move, Piece, Size, SqColor, Square, Player } from "./types";
+import { FEN, Move, Piece, Size, SqColor, Square } from "./types";
 import { assert, coords_to_square, square_to_coords } from "./util";
 import {
   is_valid_fen,
@@ -18,7 +18,7 @@ export const Amazons = (fen_or_size?: number | FEN) => {
 
   let moves: Move[];
   let moves_dict: { [sq: Square]: Square[] };
-  let pieces: { [piece: string]: Square[] };
+  let pieces: { w: Square[]; b: Square[]; x: Square[] };
 
   let update = () => {
     // update list
@@ -35,7 +35,7 @@ export const Amazons = (fen_or_size?: number | FEN) => {
 
     // update pieces
     let new_pieces = engine.get_pieces();
-    pieces = {};
+    pieces = { w: [], b: [], x: [] };
     for (let [k, v] of Object.entries(new_pieces)) {
       pieces[LAYOUT_MAP[k]] = v;
     }
