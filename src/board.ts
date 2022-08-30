@@ -6,6 +6,11 @@ export class Board {
   public board: Piece[][];
   readonly rows: number;
   readonly cols: number;
+  private pieces: {
+    [Piece.WHITE]: Square[];
+    [Piece.BLACK]: Square[];
+    [Piece.ARROW]: Square[];
+  };
 
   /**
    * Class that handles movement of the pieces.
@@ -19,6 +24,7 @@ export class Board {
     this.rows = rows;
     this.cols = cols;
     this.board = layout_to_board(layout, cols);
+    this.pieces = this.get_initial_pieces();
   }
 
   /**
@@ -38,19 +44,26 @@ export class Board {
     if (typeof sq2 === "undefined") {
       // place an arrow at specified square
       this.put(Piece.ARROW, sq1);
+      this.pieces[Piece.ARROW].push(sq1);
       return;
     }
     // move queen at sq1 to sq2. Assumes sq1 !== sq2
-    this.put(this.get(sq1), sq2);
+    const prev = this.get(sq1) as Piece.WHITE | Piece.BLACK;
+    this.put(prev, sq2);
     this.put(Piece.EMPTY, sq1);
+
+    // update pieces, but keep order
+    this.pieces[prev][this.pieces[prev].indexOf(sq1)] = sq2;
     if (sq3) {
       // place an arrow at specified square
       this.put(Piece.ARROW, sq3);
+      this.pieces[Piece.ARROW].push(sq3);
     }
   }
 
   /**
    * undo a move on the board. different behavior depending of number of args:
+   * WARNING: assumes you are undoing the last move! otherwise the pieces get messed up.
    * 1 arg: assumes second part of move: clears sq1 (hopefully from an arrow)
    * 2 args: assumes first part of move: moves piece at sq2 to sq1 and clears sq2
    * 3 args: assumes full move: clears sq3, then moves piece at sq2 to sq1 and clears sq2
@@ -59,15 +72,20 @@ export class Board {
     if (typeof sq2 === "undefined") {
       // undo placement of an arrow
       this.put(Piece.EMPTY, sq1);
+      this.pieces[Piece.ARROW].pop();
       return;
     }
     if (sq3) {
       // remove arrow
       this.put(Piece.EMPTY, sq3);
+      this.pieces[Piece.ARROW].pop();
     }
     // undo movement of a queen. Assumes sq1 !== sq2
-    this.put(this.get(sq2), sq1);
+    const prev = this.get(sq2) as Piece.BLACK | Piece.WHITE;
+    this.put(prev, sq1);
     this.put(Piece.EMPTY, sq2);
+    // update pieces, but keep order
+    this.pieces[prev][this.pieces[prev].indexOf(sq2)] = sq1;
   }
 
   /**
@@ -88,28 +106,8 @@ export class Board {
     return copy;
   }
 
-  get_positions(queen: Piece.BLACK | Piece.WHITE) {
-    let squares: Square[] = [];
-
-    for (let r = 0; r < this.rows; r++)
-      for (let c = 0; c < this.cols; c++)
-        if (this.board[r][c] === queen) squares.push(this.from_coords(r, c));
-    return squares;
-  }
-
   get_pieces() {
-    let pieces = {
-      [Piece.WHITE]: [] as Square[],
-      [Piece.BLACK]: [] as Square[],
-      [Piece.ARROW]: [] as Square[],
-    };
-
-    for (let r = 0; r < this.rows; r++)
-      for (let c = 0; c < this.cols; c++) {
-        let p = this.board[r][c];
-        if (p !== Piece.EMPTY) pieces[p].push(this.from_coords(r, c));
-      }
-    return pieces;
+    return this.pieces;
   }
 
   get_vision(sq: Square) {
@@ -169,6 +167,21 @@ export class Board {
   private from_coords(row: number, col: number) {
     let sq: Square = `${RANKS[col]}${this.rows - row}` as Square;
     return sq;
+  }
+
+  private get_initial_pieces() {
+    let pieces = {
+      [Piece.WHITE]: [],
+      [Piece.BLACK]: [],
+      [Piece.ARROW]: [],
+    };
+
+    for (let r = 0; r < this.rows; r++)
+      for (let c = 0; c < this.cols; c++) {
+        let p = this.board[r][c];
+        if (p !== Piece.EMPTY) pieces[p].push(this.from_coords(r, c));
+      }
+    return pieces;
   }
 }
 
