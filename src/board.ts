@@ -47,13 +47,9 @@ export class Board {
       this.pieces[Piece.ARROW].push(sq1);
       return;
     }
-    // move queen at sq1 to sq2. Assumes sq1 !== sq2
-    const prev = this.get(sq1) as Piece.WHITE | Piece.BLACK;
-    this.put(prev, sq2);
-    this.put(Piece.EMPTY, sq1);
 
-    // update pieces, but keep order
-    this.pieces[prev][this.pieces[prev].indexOf(sq1)] = sq2;
+    this.move_queen(sq1, sq2);
+
     if (sq3) {
       // place an arrow at specified square
       this.put(Piece.ARROW, sq3);
@@ -71,21 +67,16 @@ export class Board {
   undo(sq1: Square, sq2?: Square, sq3?: Square) {
     if (typeof sq2 === "undefined") {
       // undo placement of an arrow
-      this.put(Piece.EMPTY, sq1);
+      this.remove(sq1);
       this.pieces[Piece.ARROW].pop();
       return;
     }
     if (sq3) {
       // remove arrow
-      this.put(Piece.EMPTY, sq3);
+      this.remove(sq3);
       this.pieces[Piece.ARROW].pop();
     }
-    // undo movement of a queen. Assumes sq1 !== sq2
-    const prev = this.get(sq2) as Piece.BLACK | Piece.WHITE;
-    this.put(prev, sq1);
-    this.put(Piece.EMPTY, sq2);
-    // update pieces, but keep order
-    this.pieces[prev][this.pieces[prev].indexOf(sq2)] = sq1;
+    this.move_queen(sq2, sq1);
   }
 
   /**
@@ -134,16 +125,6 @@ export class Board {
   }
 
   /**
-   * puts the specified piece in the specified square
-   */
-  put(piece: Piece, sq: Square) {
-    // square to coords
-    let [r, c] = this.to_coords(sq);
-
-    this.board[r][c] = piece;
-  }
-
-  /**
    * returns the piece at the specified square
    */
   get(sq: Square) {
@@ -152,6 +133,40 @@ export class Board {
   }
 
   // PRIVATE METHODS
+
+  /**
+   * puts the specified non empty piece in the specified square
+   * DOESN'T handle the updating of this.pieces
+   */
+  private put(piece: Piece.WHITE | Piece.BLACK | Piece.ARROW, sq: Square) {
+    // square to coords
+    let [r, c] = this.to_coords(sq);
+    this.board[r][c] = piece;
+  }
+
+  /**
+   * clears the specified square.
+   * DOESN'T handle the updating of this.pieces
+   */
+  private remove(sq: Square) {
+    // square to coords
+    let [r, c] = this.to_coords(sq);
+    this.board[r][c] = Piece.EMPTY;
+  }
+
+  /**
+   * moves (without checking) the piece on sq1 to sq2 and clears sq2
+   * DOES handle the updating of this.pieces
+   */
+  private move_queen(sq1: Square, sq2: Square) {
+    // move queen at sq1 to sq2. Assumes sq1 !== sq2
+    const prev = this.get(sq1) as Piece.WHITE | Piece.BLACK;
+    this.put(prev, sq2);
+    this.remove(sq1);
+
+    // update pieces, but keep order
+    this.pieces[prev][this.pieces[prev].indexOf(sq1)] = sq2;
+  }
 
   /**
    * given a square, returns the row and col to index Piece[][]
