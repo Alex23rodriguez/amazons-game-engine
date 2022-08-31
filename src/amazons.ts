@@ -1,6 +1,6 @@
 import { DEFAULT_POSITIONS, LAYOUT_MAP } from "./consts";
 import { Engine } from "./engine";
-import { FEN, Move, Size, SqColor, Square } from "./types";
+import { Coords, FEN, Move, Size, SqColor, Square } from "./types";
 import { assert, coords_to_square, square_to_coords } from "./util";
 import {
   is_valid_fen,
@@ -135,6 +135,17 @@ export const Amazons = (fen_or_size?: number | FEN) => {
       coords.row = size.rows - coords.row - 1; // change to top-left indexing
       let color = (coords.row + coords.col) % 2;
       return color === SqColor.DARK ? "dark" : "light";
+    },
+    square_to_coords: (sq: Square) => square_to_coords(sq, size),
+    coords_to_square: (coords: Coords) => coords_to_square(coords, size),
+    index_to_square: (index: number) => {
+      return coords_to_square(
+        {
+          row: Math.floor(index / size.cols),
+          col: index % size.cols,
+        },
+        size
+      );
     },
     turn: (other = false) => engine.turn(other),
     half_undo: () => {
