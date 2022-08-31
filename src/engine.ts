@@ -108,10 +108,10 @@ export class Engine {
     return this._board.ascii(flip);
   }
 
-  put(piece: Piece, sq: Square) {
-    this._board.put(piece, sq);
-    this.hist = []; // clear history, otherwise will get errors
-  }
+  // put(piece: Piece, sq: Square) {
+  //   this._board.put(piece, sq);
+  //   this.hist = []; // clear history, otherwise will get errors
+  // }
 
   get(sq: Square) {
     return this._board.get(sq);

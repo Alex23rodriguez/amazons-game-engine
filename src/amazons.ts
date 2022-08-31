@@ -107,18 +107,18 @@ export const Amazons = (fen_or_size?: number | FEN) => {
     moves_dict: () => moves_dict,
     pieces: () => pieces,
     // pgn
-    put: (piece: Piece, sq: Square) => {
-      assert(is_square_in_range(sq, size));
-      engine.put(piece, sq);
-      update();
-    },
-    remove: (sq: Square) => {
-      assert(is_square_in_range(sq, size));
-      let p = engine.get(sq);
-      engine.put(Piece.EMPTY, sq);
-      update();
-      return p;
-    },
+    // put: (piece: Piece, sq: Square) => {
+    //   assert(is_square_in_range(sq, size));
+    //   engine.put(piece, sq);
+    //   update();
+    // },
+    // remove: (sq: Square) => {
+    //   assert(is_square_in_range(sq, size));
+    //   let p = engine.get(sq);
+    //   engine.put(Piece.EMPTY, sq);
+    //   update();
+    //   return p;
+    // },
     // reset
     reset: () => {
       engine = new Engine(initial_fen);
