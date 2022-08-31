@@ -7,8 +7,8 @@ export class Engine {
   private _turn: Player;
   private _shooting_sq: Square;
   private _move_num: number;
-  readonly rows;
-  readonly cols;
+  readonly rows: number;
+  readonly cols: number;
 
   private hist: Move[];
 

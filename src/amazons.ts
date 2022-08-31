@@ -1,6 +1,6 @@
 import { DEFAULT_POSITIONS, LAYOUT_MAP } from "./consts";
 import { Engine } from "./engine";
-import { FEN, Move, Piece, Size, SqColor, Square } from "./types";
+import { FEN, Move, Size, SqColor, Square } from "./types";
 import { assert, coords_to_square, square_to_coords } from "./util";
 import {
   is_valid_fen,
@@ -61,7 +61,7 @@ export const Amazons = (fen_or_size?: number | FEN) => {
     // header
     history: () => engine.history,
     in_endgame: null, //TODO
-    load: (fen_or_size: any) => {
+    load: (fen_or_size: FEN | number) => {
       try {
         let eng = try_load(fen_or_size);
         engine = eng;
@@ -148,7 +148,7 @@ export const Amazons = (fen_or_size?: number | FEN) => {
   };
 };
 
-function try_load(fen_or_size) {
+function try_load(fen_or_size: FEN | number) {
   let fen: FEN;
   let engine: Engine;
 
