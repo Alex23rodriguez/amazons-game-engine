@@ -34,9 +34,7 @@ export const Amazons = (fen_or_size?: number | FEN) => {
     }
 
     // update pieces
-    let new_pieces = engine.get_pieces();
-    pieces = { w: [], b: [], x: [] };
-    for (let [k, v] of Object.entries(new_pieces)) {
+    for (let [k, v] of Object.entries(engine.get_pieces())) {
       pieces[LAYOUT_MAP[k]] = v;
     }
   };
