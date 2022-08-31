@@ -13,4 +13,4 @@ while (moves.length) {
   moves = e.moves();
   console.log(e.ascii());
 }
-console.log(`${e.turn} loses!`);
+console.log(`${e.turn()} loses!`);
