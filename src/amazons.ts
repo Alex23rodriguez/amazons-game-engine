@@ -18,7 +18,11 @@ export const Amazons = (fen_or_size?: number | FEN) => {
 
   let moves: Move[];
   let moves_dict: { [sq: Square]: Square[] };
-  let pieces: { w: Square[]; b: Square[]; x: Square[] };
+  let pieces: { w: Square[]; b: Square[]; x: Square[] } = {
+    w: [],
+    b: [],
+    x: [],
+  };
 
   let update = () => {
     // update list
