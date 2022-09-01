@@ -97,7 +97,7 @@ export class Board {
     return copy;
   }
 
-  get_positions(piece: Piece.WHITE | Piece.BLACK | Piece.EMPTY) {
+  get_positions(piece: Piece.WHITE | Piece.BLACK | Piece.ARROW) {
     return this.pieces[piece] as Square[];
   }
 
