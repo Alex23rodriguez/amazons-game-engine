@@ -25,21 +25,24 @@ export const Amazons = (fen_or_size?: number | FEN, safe = true) => {
   };
 
   let update = () => {
+    // update pieces
+    for (let [k, v] of Object.entries(engine.get_pieces())) {
+      pieces[LAYOUT_MAP[k]] = v;
+    }
+
     // update list
     moves = engine.moves();
 
     // update dict
-    moves_dict = {};
+    moves_dict = Object.fromEntries(
+      engine.get_turn_positions().map((sq) => [sq, []])
+    );
+
     for (let m of moves) {
       // TODO: maybe change? its wierd when shooting
       let [start, end] = m;
-      if (!moves_dict[start]) moves_dict[start] = [];
+      if (!moves_dict[start]) moves_dict[start] = []; // kept just for shooting moves_dict, which isn't very useful
       if (end) moves_dict[start].push(end);
-    }
-
-    // update pieces
-    for (let [k, v] of Object.entries(engine.get_pieces())) {
-      pieces[LAYOUT_MAP[k]] = v;
     }
   };
 

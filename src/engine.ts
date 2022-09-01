@@ -123,6 +123,15 @@ export class Engine {
     if (other) return this._turn === P_WHITE ? P_BLACK : P_WHITE;
     return this._turn;
   }
+
+  get_turn_positions(other = false) {
+    if (other)
+      return this._board.get_positions(
+        LAYOUT_MAP[this._turn === P_WHITE ? P_BLACK : P_WHITE]
+      );
+
+    return this._board.get_positions(LAYOUT_MAP[this._turn]);
+  }
   // GETTERS
 
   get board() {
