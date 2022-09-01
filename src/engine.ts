@@ -91,9 +91,7 @@ export class Engine {
       return queen_vision.map((s) => [s]);
     }
 
-    let queens = this._board.get_positions(
-      LAYOUT_MAP[this._turn] as Piece.BLACK | Piece.WHITE
-    );
+    let queens = this._board.get_positions(LAYOUT_MAP[this._turn]);
     let ans = [];
 
     for (let q of queens) {

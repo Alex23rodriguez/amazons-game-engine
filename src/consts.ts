@@ -9,7 +9,14 @@ export const L_ARROW = "x"; // this one is not a player, but used in layout
 export const NOT_SHOOTING = "-";
 export const LAYOUT_CHARS = P_BLACK + P_WHITE + L_ARROW + "0123456789";
 
-export const LAYOUT_MAP = {
+export const LAYOUT_MAP: {
+  [P_WHITE]: Piece.WHITE;
+  [P_BLACK]: Piece.BLACK;
+  [L_ARROW]: Piece.ARROW;
+  [Piece.WHITE]: typeof P_WHITE;
+  [Piece.BLACK]: typeof P_BLACK;
+  [Piece.ARROW]: typeof L_ARROW;
+} = {
   [P_WHITE]: Piece.WHITE,
   [P_BLACK]: Piece.BLACK,
   [L_ARROW]: Piece.ARROW,
