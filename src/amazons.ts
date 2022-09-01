@@ -8,9 +8,9 @@ import {
   is_square_in_range,
 } from "./validation";
 
-export const Amazons = (fen_or_size?: number | FEN) => {
+export const Amazons = (fen_or_size?: number | FEN, safe = true) => {
   // INITIAL SETUP
-  let engine = try_load(fen_or_size);
+  let engine = try_load(fen_or_size, safe);
   let initial_fen = engine.fen();
 
   // VARIABLES
@@ -63,9 +63,9 @@ export const Amazons = (fen_or_size?: number | FEN) => {
     // header
     history: () => engine.history,
     in_endgame: null, //TODO
-    load: (fen_or_size: FEN | number) => {
+    load: (fen_or_size: FEN | number, safe = true) => {
       try {
-        let eng = try_load(fen_or_size);
+        let eng = try_load(fen_or_size, safe);
         engine = eng;
         size = { rows: engine.rows, cols: eng.cols };
         update();
@@ -161,7 +161,7 @@ export const Amazons = (fen_or_size?: number | FEN) => {
   };
 };
 
-function try_load(fen_or_size: FEN | number) {
+function try_load(fen_or_size: FEN | number, safe: boolean) {
   let fen: FEN;
   let engine: Engine;
 
@@ -176,7 +176,8 @@ function try_load(fen_or_size: FEN | number) {
 
     case "string":
       fen = fen_or_size.toLowerCase() as FEN;
-      engine = assert(is_valid_fen(fen)).engine;
+      if (safe) engine = assert(is_valid_fen(fen)).engine;
+      else engine = new Engine(fen);
       break;
 
     default:
