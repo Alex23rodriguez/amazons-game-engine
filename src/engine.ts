@@ -1,6 +1,14 @@
 import { Board } from "./board";
 import { LAYOUT_MAP, P_BLACK, P_WHITE, NOT_SHOOTING } from "./consts";
-import { FEN, Move, Piece, Player, Square } from "./types";
+import {
+  BoardPiecesObj,
+  FEN,
+  GameState,
+  Move,
+  PiecesObj,
+  Player,
+  Square,
+} from "./types";
 
 export class Engine {
   private _board: Board;
@@ -12,13 +20,26 @@ export class Engine {
 
   private hist: Move[];
 
-  constructor(fen: FEN) {
-    let [layout, turn, shooting_sq, move_num] = fen.split(/\s+/);
-    this._turn = turn as Player;
-    this._shooting_sq =
-      shooting_sq === NOT_SHOOTING ? null : (shooting_sq as Square);
-    this._move_num = Number(move_num);
-    this._board = new Board(layout);
+  constructor(fen: FEN);
+  constructor(state: GameState);
+  constructor(state: FEN | GameState) {
+    if (typeof state === "string") {
+      const fen = state;
+      const [layout, turn, shooting_sq, move_num] = fen.split(/\s+/);
+      this._turn = turn as Player;
+      this._shooting_sq =
+        shooting_sq === NOT_SHOOTING ? null : (shooting_sq as Square);
+      this._move_num = Number(move_num);
+      this._board = new Board(layout);
+    } else {
+      this._turn = state.turn;
+      this._shooting_sq = state.shooting_sq;
+      this._move_num = state.move_num ?? 1;
+      this._board = new Board({
+        size: state.size,
+        pieces: this.swap_pieces_obj(state.pieces),
+      });
+    }
     this.rows = this._board.rows;
     this.cols = this._board.cols;
 
@@ -197,5 +218,15 @@ export class Engine {
     this.switch_player();
     if (this._turn === P_BLACK) this._move_num--;
     this._shooting_sq = null;
+  }
+
+  private swap_pieces_obj(pieces: PiecesObj): BoardPiecesObj;
+  private swap_pieces_obj(pieces: BoardPiecesObj): PiecesObj;
+  private swap_pieces_obj(pieces: PiecesObj | BoardPiecesObj) {
+    const p = {};
+    Object.entries(pieces).forEach(([key, arr]) => {
+      p[LAYOUT_MAP[key]] = arr;
+    });
+    return p;
   }
 }
