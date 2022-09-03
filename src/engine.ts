@@ -52,6 +52,16 @@ export class Engine {
     } ${this._move_num}`;
   }
 
+  save_state(): GameState {
+    return {
+      size: { rows: this.rows, cols: this.cols },
+      pieces: this.swap_pieces_obj(this._board.get_pieces()),
+      turn: this._turn,
+      shooting_sq: this._shooting_sq,
+      move_num: this._move_num,
+    };
+  }
+
   move(m: Move) {
     // move board
     this._board.move(...m);
