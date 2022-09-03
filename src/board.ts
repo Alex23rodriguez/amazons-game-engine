@@ -1,6 +1,10 @@
 import { LAYOUT_MAP, RANKS } from "./consts";
 import { ascii } from "./misc";
 import { Piece, Square } from "./types";
+const EMPTY = Piece.EMPTY;
+const WHITE = Piece.WHITE;
+const BLACK = Piece.BLACK;
+const ARROW = Piece.ARROW;
 
 export class Board {
   public board: Piece[][];
@@ -43,8 +47,8 @@ export class Board {
   move(sq1: Square, sq2?: Square, sq3?: Square) {
     if (typeof sq2 === "undefined") {
       // place an arrow at specified square
-      this.put(Piece.ARROW, sq1);
-      this.pieces[Piece.ARROW].push(sq1);
+      this.put(ARROW, sq1);
+      this.pieces[ARROW].push(sq1);
       return;
     }
 
@@ -52,8 +56,8 @@ export class Board {
 
     if (sq3) {
       // place an arrow at specified square
-      this.put(Piece.ARROW, sq3);
-      this.pieces[Piece.ARROW].push(sq3);
+      this.put(ARROW, sq3);
+      this.pieces[ARROW].push(sq3);
     }
   }
 
@@ -68,13 +72,13 @@ export class Board {
     if (typeof sq2 === "undefined") {
       // undo placement of an arrow
       this.remove(sq1);
-      this.pieces[Piece.ARROW].pop();
+      this.pieces[ARROW].pop();
       return;
     }
     if (sq3) {
       // remove arrow
       this.remove(sq3);
-      this.pieces[Piece.ARROW].pop();
+      this.pieces[ARROW].pop();
     }
     this.move_queen(sq2, sq1);
   }
@@ -97,10 +101,16 @@ export class Board {
     return copy;
   }
 
+  /**
+   * return the Square[] of the requested piece
+   */
   get_positions(piece: Piece.WHITE | Piece.BLACK | Piece.ARROW) {
     return this.pieces[piece];
   }
 
+  /**
+   * return all pieces
+   */
   get_pieces() {
     return this.pieces;
   }
@@ -114,7 +124,7 @@ export class Board {
         let [r, c] = this.to_coords(sq);
         r += i;
         c += j;
-        while (this.board[r] && this.board[r][c] === Piece.EMPTY) {
+        while (this.board[r] && this.board[r][c] === EMPTY) {
           squares.push(this.from_coords(r, c));
           r += i;
           c += j;
@@ -155,7 +165,7 @@ export class Board {
   private remove(sq: Square) {
     // square to coords
     let [r, c] = this.to_coords(sq);
-    this.board[r][c] = Piece.EMPTY;
+    this.board[r][c] = EMPTY;
   }
 
   /**
@@ -190,15 +200,15 @@ export class Board {
 
   private get_initial_pieces() {
     let pieces = {
-      [Piece.WHITE]: [],
-      [Piece.BLACK]: [],
-      [Piece.ARROW]: [],
+      [WHITE]: [],
+      [BLACK]: [],
+      [ARROW]: [],
     };
 
     for (let r = 0; r < this.rows; r++)
       for (let c = 0; c < this.cols; c++) {
         let p = this.board[r][c];
-        if (p !== Piece.EMPTY) pieces[p].push(this.from_coords(r, c));
+        if (p !== EMPTY) pieces[p].push(this.from_coords(r, c));
       }
     return pieces;
   }
@@ -225,7 +235,7 @@ function layout_to_board(layout: string, cols: number) {
  */
 function make_board_row(layout_row: string, cols: number) {
   // TODO: change to regex parsing
-  let ans: Piece[] = Array(cols).fill(Piece.EMPTY);
+  let ans: Piece[] = Array(cols).fill(EMPTY);
   let index = 0;
   let sub = "";
   for (let char of layout_row) {
@@ -250,7 +260,7 @@ function make_layout_row(row: Piece[]) {
   let ans = "";
   let cnt_empty = 0;
   for (let p of row) {
-    if (p === Piece.EMPTY) {
+    if (p === EMPTY) {
       cnt_empty++;
       continue;
     }
