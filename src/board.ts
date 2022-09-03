@@ -1,41 +1,63 @@
 import { LAYOUT_MAP, RANKS } from "./consts";
 import { ascii } from "./misc";
-import { Piece, Square } from "./types";
+import { Piece, Square, Size } from "./types";
+
 const EMPTY = Piece.EMPTY;
 const WHITE = Piece.WHITE;
 const BLACK = Piece.BLACK;
 const ARROW = Piece.ARROW;
 
+type PiecesObj = {
+  [WHITE]: Square[];
+  [BLACK]: Square[];
+  [ARROW]: Square[];
+};
+
 export class Board {
   public board: Piece[][];
   readonly rows: number;
   readonly cols: number;
-  private pieces: {
-    [Piece.WHITE]: Square[];
-    [Piece.BLACK]: Square[];
-    [Piece.ARROW]: Square[];
-  };
+  private pieces: PiecesObj;
 
   /**
    * Class that handles movement of the pieces.
    * DOES NOT verify that the arguments it is given are correct, so should not be used directly (instead, use the API)
    * this is made for performance at the cost of soundness
    */
-  constructor(layout: string) {
-    let [rows, cols] = get_layout_shape(layout);
-    rows = rows;
-    cols = cols;
-    this.rows = rows;
-    this.cols = cols;
-    this.board = layout_to_board(layout, cols);
-    this.pieces = this.get_initial_pieces();
+  constructor(layout: string);
+  constructor(layout: { size: Size; pieces: PiecesObj });
+  constructor(layout: string | { size: Size; pieces: PiecesObj }) {
+    if (typeof layout === "string") {
+      let [rows, cols] = get_layout_shape(layout);
+      rows = rows;
+      cols = cols;
+      this.rows = rows;
+      this.cols = cols;
+      this.board = layout_to_board(layout, cols);
+      this.pieces = this.get_initial_pieces();
+    } else {
+      this.rows = layout.size.rows;
+      this.cols = layout.size.cols;
+
+      this.board = Array(this.rows).fill(Array(this.cols).fill(0));
+      this.pieces = layout.pieces;
+
+      Object.entries(layout.pieces).forEach(([piece, arr]) => {
+        arr.forEach((sq) => {
+          this.put(Number(piece), sq);
+        });
+      });
+    }
   }
 
   /**
    * creates and returns an empty Board of the given size
    */
   static from_size(rows: number, cols: number) {
-    return new Board(Array(rows).fill(cols).join("/"));
+    return new Board({
+      size: { rows, cols },
+      pieces: { [WHITE]: [], [BLACK]: [], [ARROW]: [] },
+    });
   }
 
   /**
