@@ -1,23 +1,17 @@
 import { LAYOUT_MAP, RANKS } from "./consts";
 import { ascii } from "./misc";
-import { Piece, Square, Size } from "./types";
+import { Piece, Square, Size, BoardPiecesObj } from "./types";
 
 const EMPTY = Piece.EMPTY;
 const WHITE = Piece.WHITE;
 const BLACK = Piece.BLACK;
 const ARROW = Piece.ARROW;
 
-type PiecesObj = {
-  [WHITE]: Square[];
-  [BLACK]: Square[];
-  [ARROW]: Square[];
-};
-
 export class Board {
   public board: Piece[][];
   readonly rows: number;
   readonly cols: number;
-  private pieces: PiecesObj;
+  private pieces: BoardPiecesObj;
 
   /**
    * Class that handles movement of the pieces.
@@ -25,8 +19,8 @@ export class Board {
    * this is made for performance at the cost of soundness
    */
   constructor(layout: string);
-  constructor(layout: { size: Size; pieces: PiecesObj });
-  constructor(layout: string | { size: Size; pieces: PiecesObj }) {
+  constructor(layout: { size: Size; pieces: BoardPiecesObj });
+  constructor(layout: string | { size: Size; pieces: BoardPiecesObj }) {
     if (typeof layout === "string") {
       let [rows, cols] = get_layout_shape(layout);
       rows = rows;

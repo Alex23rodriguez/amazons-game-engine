@@ -28,3 +28,23 @@ export const enum Piece {
   /** Spot was destroyed by an arrow. */
   ARROW,
 }
+
+export type BoardPiecesObj = {
+  [Piece.WHITE]: Square[];
+  [Piece.BLACK]: Square[];
+  [Piece.ARROW]: Square[];
+};
+
+export type PiecesObj = {
+  w: Square[];
+  b: Square[];
+  x: Square[];
+};
+
+export interface GameState {
+  size: Size;
+  pieces: PiecesObj;
+  shooting_sq: Square | null;
+  turn: Player;
+  move_num?: number;
+}
