@@ -39,7 +39,9 @@ export class Board {
       this.rows = layout.size.rows;
       this.cols = layout.size.cols;
 
-      this.board = Array(this.rows).fill(Array(this.cols).fill(0));
+      this.board = Array(this.rows)
+        .fill(undefined)
+        .map(() => Array(this.cols).fill(0));
       this.pieces = layout.pieces;
 
       Object.entries(layout.pieces).forEach(([piece, arr]) => {
