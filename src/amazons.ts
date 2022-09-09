@@ -17,8 +17,6 @@ import {
   is_square_in_range,
 } from "./validation";
 
-// function Amazons(fen_or_size?: number | FEN, safe = true): any;
-// function Amazons(fen: FEN, safe)
 export class Amazons {
   private engine: Engine;
   readonly initial_fen: FEN;
@@ -27,10 +25,10 @@ export class Amazons {
   private _moves_dict: { [sq: Square]: Square[] };
   private _size: Size;
 
-  // constructor(fen: FEN, safe?: boolean);
+  constructor(fen: FEN);
   constructor(size?: number);
   constructor(state: GameState);
-  constructor(param?: number | GameState) {
+  constructor(param?: number | FEN | GameState) {
     this.engine = try_load(param);
     this.initial_fen = this.engine.fen();
 
