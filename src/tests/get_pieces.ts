@@ -1,5 +1,5 @@
 import { Amazons } from "../amazons";
 
-let amz = Amazons();
+let amz = new Amazons();
 
 console.log(amz.pieces());
