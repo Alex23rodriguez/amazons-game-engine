@@ -79,7 +79,7 @@ export class Amazons {
   // header
   history = () => this.engine.history;
   in_endgame = null; //TODO
-  load = (fen_or_size: FEN | number) => {
+  load = (fen_or_size: FEN | number | GameState) => {
     try {
       let eng = try_load(fen_or_size);
       this.engine = eng;
@@ -145,6 +145,7 @@ export class Amazons {
   };
   // set_comment
   size = () => this._size;
+  state = () => this.engine.save_state();
   shooting = () => this.engine.shooting_sq !== null;
   shooting_sq = () => this.engine.shooting_sq;
   square_color = (sq: Square) => {
