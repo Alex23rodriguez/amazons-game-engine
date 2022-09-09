@@ -22,7 +22,7 @@ let bad_fen = {
 
 for (let k in bad_fen) {
   try {
-    let a = Amazons(bad_fen[k]);
+    let a = new Amazons(bad_fen[k]);
     console.log(k, ": no error");
   } catch (e) {
     console.log(k, ":", e.message);
