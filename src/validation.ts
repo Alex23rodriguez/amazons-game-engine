@@ -2,6 +2,7 @@ import {
   DEFAULT_POSITIONS,
   LAYOUT_CHARS,
   LAYOUT_MAP,
+  L_ARROW,
   MAX_SIZE,
   P_BLACK,
   P_WHITE,
@@ -245,4 +246,30 @@ export function is_default_size(n: number) {
       )}. Instead got ${n}`
     );
   return wrap(true, null, { fen });
+}
+
+export function is_size(size: any) {
+  const fail = wrap(
+    false,
+    "size must be an object with properties 'rows' and 'cols', integers between 1 and 20"
+  );
+  if (typeof size !== "object" || Object.keys(size).length !== 2) {
+    return fail;
+  }
+
+  const { rows, cols } = size;
+
+  if (
+    typeof rows !== "number" ||
+    typeof cols !== "number" ||
+    rows < 1 ||
+    rows > 20 ||
+    cols < 1 ||
+    cols > 20 ||
+    rows !== ~~rows ||
+    cols !== ~~cols
+  )
+    return fail;
+
+  return wrap(true, null);
 }
