@@ -202,7 +202,6 @@ export function is_fen(fen: string) {
 }
 
 export function is_valid_fen(fen: string) {
-  // TODO
   let temp = is_fen(fen);
   if (temp.error) return temp;
 

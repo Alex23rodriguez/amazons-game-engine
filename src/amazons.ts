@@ -15,6 +15,7 @@ import {
   is_valid_fen,
   is_default_size,
   is_square_in_range,
+  is_valid_gamestate,
 } from "./validation";
 
 export class Amazons {
@@ -25,11 +26,11 @@ export class Amazons {
   private _moves_dict: { [sq: Square]: Square[] };
   private _size: Size;
 
-  constructor(fen: FEN);
+  constructor(fen: FEN, skip_validation?: boolean);
   constructor(size?: number);
-  constructor(state: GameState);
-  constructor(param?: number | FEN | GameState) {
-    this.engine = try_load(param);
+  constructor(state: GameState, skip_validation?: boolean);
+  constructor(param?: number | FEN | GameState, skip_validation = false) {
+    this.engine = try_load(param, skip_validation);
     this.initial_fen = this.engine.fen();
 
     this._size = { rows: this.engine.rows, cols: this.engine.cols };
@@ -175,7 +176,7 @@ export class Amazons {
   validate_fen = (fen: string) => is_valid_fen(fen);
 }
 
-function try_load(param?: FEN | number | GameState) {
+function try_load(param?: FEN | number | GameState, skip_validation = false) {
   let fen: FEN;
   let engine: Engine;
 
@@ -190,11 +191,12 @@ function try_load(param?: FEN | number | GameState) {
 
     case "string":
       // fen = param.toLowerCase() as FEN;
-      engine = assert(is_valid_fen(param)).engine;
+      if (skip_validation) engine = new Engine(param);
+      else engine = assert(is_valid_fen(param)).engine;
       break;
 
     case "object":
-      // assert(is_valid_state) //TODO assert is valid GameState
+      if (!skip_validation) assert(is_valid_gamestate(param));
       engine = new Engine(param);
       break;
 
