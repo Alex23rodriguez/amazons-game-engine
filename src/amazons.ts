@@ -190,7 +190,7 @@ function try_load(param?: FEN | number | GameState) {
 
     case "string":
       // fen = param.toLowerCase() as FEN;
-      engine = assert(is_valid_fen(fen)).engine;
+      engine = assert(is_valid_fen(param)).engine;
       break;
 
     case "object":
