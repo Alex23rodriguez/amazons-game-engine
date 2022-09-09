@@ -28,5 +28,8 @@
   "bugs": {
     "url": "https://github.com/Alex23rodriguez/amazons-game-engine/issues"
   },
-  "homepage": "https://github.com/Alex23rodriguez/amazons-game-engine#readme"
+  "homepage": "https://github.com/Alex23rodriguez/amazons-game-engine#readme",
+  "devDependencies": {
+    "jest": "^29.0.2"
+  }
 }
