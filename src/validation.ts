@@ -129,7 +129,7 @@ export function is_coords_in_range({ row, col }: Coords, { rows, cols }: Size) {
 /**
  * Verify that the given string coincides with a char designating either player
  */
-export function is_player(p: string) {
+export function is_turn(p: string) {
   let ans = p === P_BLACK || p === P_WHITE;
   return ans
     ? wrap(true, null)
@@ -138,11 +138,12 @@ export function is_player(p: string) {
         `Turn field invalid. Expected '${P_WHITE}' or '${P_BLACK}', instead got '${p}'`
       );
 }
+export const is_player = is_turn;
 
 /**
  * Verify that the given parameter represents a positive int
  */
-export function is_turn(turn: number | string) {
+export function is_move_num(turn: number | string) {
   let n = Number(turn);
   let ans = n >= 1 && n === ~~n;
   return ans
@@ -176,10 +177,10 @@ export function is_fen(fen: string) {
   const [layout, turn, shooting_sq, move_num] = fields;
 
   // start fen validation
-  let temp = is_player(turn);
+  let temp = is_turn(turn);
   if (temp.error) return temp;
 
-  temp = is_turn(move_num);
+  temp = is_move_num(move_num);
   if (temp.error) return temp;
 
   let dimensions = get_layout_shape(layout);
