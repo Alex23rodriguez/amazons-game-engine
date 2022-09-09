@@ -299,3 +299,32 @@ export function is_pieces(pieces: any, size: Size) {
   return wrap(true, null);
 }
 
+export function is_valid_gamestate(state: any) {
+  const _wrap = (err: string) => wrap(false, "invalid GameState: " + err);
+
+  if (typeof state !== "object") return _wrap("state must be an object");
+
+  const size = state.size;
+  let ans = is_size(size);
+  if (!ans.value) return _wrap(ans.error);
+
+  ans = is_pieces(state.pieces, size);
+  if (!ans.value) return _wrap(ans.error);
+
+  ans = is_turn(state.turn);
+  if (!ans.value) return _wrap(ans.error);
+
+  if (state.shooting_sq !== null) {
+    ans = is_square_in_range(state.shooting_sq, size);
+    if (!ans.value) return _wrap(ans.error);
+    if (!state.pieces[state.turn].includes(state.shooting_sq))
+      return _wrap("shooting square must point to shooting player's piece");
+  }
+
+  if (state.move_num) {
+    ans = is_move_num(state.move_num);
+    if (!ans.value) return _wrap(ans.error);
+  }
+
+  return wrap(true, null);
+}
