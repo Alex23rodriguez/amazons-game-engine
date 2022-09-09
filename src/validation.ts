@@ -287,7 +287,10 @@ export function is_pieces(pieces: any, size: Size) {
   let squares = new Set();
   for (const key of [P_WHITE, P_BLACK, L_ARROW]) {
     const arr = pieces[key];
-    if (!Array.isArray(arr) || arr.some((sq) => !is_square_in_range(sq, size)))
+    if (
+      !Array.isArray(arr) ||
+      arr.some((sq) => !is_square_in_range(sq, size).value)
+    )
       return fail;
 
     squares = new Set([...squares, ...arr]);
