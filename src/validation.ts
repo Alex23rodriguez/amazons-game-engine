@@ -273,3 +273,29 @@ export function is_size(size: any) {
 
   return wrap(true, null);
 }
+
+export function is_pieces(pieces: any, size: Size) {
+  const fail = wrap(
+    false,
+    `pieces must be of type { ${P_WHITE}: Square[], ${P_BLACK}: Square[], ${L_ARROW}: Square[] } within the specified Size`
+  );
+  if (typeof pieces !== "object" || Object.keys(pieces).length !== 3) {
+    return fail;
+  }
+
+  let lengths = 0;
+  let squares = new Set();
+  for (const key of [P_WHITE, P_BLACK, L_ARROW]) {
+    const arr = pieces[key];
+    if (!Array.isArray(arr) || arr.some((sq) => !is_square_in_range(sq, size)))
+      return fail;
+
+    squares = new Set([...squares, ...arr]);
+    lengths += arr.length;
+  }
+  if (squares.size !== lengths)
+    return wrap(false, "squares in pieces object cannot be repeated");
+
+  return wrap(true, null);
+}
+
