@@ -210,6 +210,3 @@ function try_load(param?: FEN | number | GameState) {
 
   return engine;
 }
-
-let a = new Amazons();
-a.index_to_square;
