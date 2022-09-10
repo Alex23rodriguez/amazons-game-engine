@@ -66,7 +66,7 @@ export class Board {
     if (typeof sq2 === "undefined") {
       // place an arrow at specified square
       this.put(ARROW, sq1);
-      this.pieces[ARROW].push(sq1);
+      this.pieces[ARROW] = this.pieces[ARROW].concat(sq1);
       return;
     }
 
