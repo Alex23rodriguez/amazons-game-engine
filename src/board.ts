@@ -197,7 +197,10 @@ export class Board {
     this.remove(sq1);
 
     // update pieces, but keep order
-    this.pieces[prev][this.pieces[prev].indexOf(sq1)] = sq2;
+    const index = this.pieces[prev].indexOf(sq1);
+    this.pieces[prev] = this.pieces[prev].map((sq, i) =>
+      i === index ? sq2 : sq
+    );
   }
 
   /**
