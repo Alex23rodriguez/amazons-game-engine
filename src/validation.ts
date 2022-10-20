@@ -45,35 +45,32 @@ function get_row_length(row: string) {
   return wrap(count, null);
 }
 
-function get_layout_shape(layout: string) {
-  let bad_layout = [null, null];
+export function is_valid_layout(layout: string) {
   let rows: string[] = layout.split("/");
-  if (rows.length > 20)
-    return wrap(bad_layout, "Board must have at most 20 rows");
+  if (rows.length > 20) return wrap(false, "Board must have at most 20 rows");
 
   // check first row to get number of columns
   let temp = get_row_length(rows[0]);
   if (temp.error) {
-    return wrap(bad_layout, `row#0 ${rows[0]}: ${temp.error}`);
+    return wrap(false, `row#0 ${rows[0]}: ${temp.error}`);
   }
   let num_cols: number = temp.value;
-  if (num_cols > 20)
-    return wrap(bad_layout, "Board must have at most 20 columns");
+  if (num_cols > 20) return wrap(false, "Board must have at most 20 columns");
 
   // check all other rows
   for (let i = 1; i < rows.length; i++) {
     let row = rows[i];
     temp = get_row_length(row);
     if (temp.error) {
-      return wrap(bad_layout, `row#${i} ${row}: ${temp.error}`);
+      return wrap(false, `row#${i} ${row}: ${temp.error}`);
     }
     if (num_cols !== temp.value)
       return wrap(
-        bad_layout,
+        false,
         `row#${i}:'${row}' should have ${num_cols} columns, but has ${temp.value}`
       );
   }
-  return wrap({ rows: rows.length, cols: num_cols }, null);
+  return wrap(true, null, { rows: rows.length, cols: num_cols });
 }
 
 /**
@@ -184,12 +181,12 @@ export function is_fen(fen: string) {
   temp = is_move_num(move_num);
   if (temp.error) return temp;
 
-  let dimensions = get_layout_shape(layout);
+  let dimensions = is_valid_layout(layout);
   if (dimensions.error) {
     return dimensions;
   }
 
-  let size = dimensions.value;
+  let size = dimensions.byprod;
 
   if (shooting_sq !== "-") {
     temp = is_square_in_range(shooting_sq, size);
